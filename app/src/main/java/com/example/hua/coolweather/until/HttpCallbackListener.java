@@ -1,8 +1,11 @@
 package com.example.hua.coolweather.until;
 
 /**
- * Created by Administrator on 2016/10/18.
+ * Created by fundmarkhua on 2016/10/18.
+ * 回调接口
  */
 
 public interface HttpCallbackListener {
+    void onFinish(String response);
+    void onError(Exception e);
 }
