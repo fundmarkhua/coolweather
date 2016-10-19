@@ -1,12 +1,24 @@
-��Զ�̻�ȡ���¸��µ�����
-git pull origin master   ##�൱���Ǵ�Զ�̻�ȡ���°汾��merge������
+coolweather 项目 clone 到了本地
+git clone git@github.com:fundmarkhua/coolweather.git
+
+从远程获取最新更新到本地
+git pull origin master   ##相当于是从远程获取最新版本并merge到本地
 
 
-git fetch origin master:tmp  ##��Զ�̻�ȡ���µİ汾�����ص�tmp��֧��
-git diff tmp                 ##�Ƚϲ�ͬ
-git merge tmp                ##�ϲ���֧
+git fetch origin master:tmp  ##从远程获取最新的版本到本地的tmp分支上
+git diff tmp                 ##比较不同
+git merge tmp                ##合并分支
 
 
-�Ѹ������͵�Զ�ֿ̲�
-
+把更新推送到远程仓库
 git push origin master
+
+撤销所有的已经add的文件:
+git reset HEAD .
+
+把<path>添加到索引库中，<path>可以是文件也可以是目录
+git add <path>
+
+提交当前工作空间的修改内容
+git commit -m ‘first commit’
+
