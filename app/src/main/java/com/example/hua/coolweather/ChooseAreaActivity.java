@@ -17,6 +17,7 @@ import com.example.hua.coolweather.model.County;
 import com.example.hua.coolweather.model.Province;
 import com.example.hua.coolweather.until.HttpCallbackListener;
 import com.example.hua.coolweather.until.HttpUtil;
+import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.Utility;
 
 import java.util.ArrayList;
@@ -66,6 +67,9 @@ public class ChooseAreaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_area);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         listView = (ListView) findViewById(R.id.list_view);
         titleText = (TextView) findViewById(R.id.title_text);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataList);
@@ -91,17 +95,23 @@ public class ChooseAreaActivity extends AppCompatActivity {
      */
     private void queryProvince() {
         provinceList = coolWeatherDB.loadProvince();
-        if (provinceList.size() > 0) {
-            dataList.clear();
-            for (Province province : provinceList) {
-                dataList.add(province.getProvinceName());
+        try {
+            if (provinceList.size() > 0) {
+                dataList.clear();
+                for (Province province : provinceList) {
+                    dataList.add(province.getProvinceName());
+                    LogUntil.w("coolWeather", province.getProvinceName());
+                }
+                adapter.notifyDataSetChanged();
+                listView.setSelection(0);
+                titleText.setText("国内");
+                currentLevel = LEVEL_PROVINCE;
+                LogUntil.w("coolWeather", "到这里");
+            } else {
+                queryFromServer(null, provinceTage);
             }
-            adapter.notifyDataSetChanged();
-            listView.setSelection(0);
-            titleText.setText("国内");
-            currentLevel = LEVEL_PROVINCE;
-        } else {
-            queryFromServer(null, provinceTage);
+        } catch (Exception e) {
+            LogUntil.w("coolWeather", e.getMessage());
         }
     }
 
@@ -129,18 +139,17 @@ public class ChooseAreaActivity extends AppCompatActivity {
      */
     private void queryCounties() {
         countyList = coolWeatherDB.loadCounties(selectedCity.getId());
-        if (countyList.size()>0){
+        if (countyList.size() > 0) {
             dataList.clear();
-            for(County county:countyList){
+            for (County county : countyList) {
                 dataList.add(county.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
             titleText.setText(selectedCity.getCityName());
             currentLevel = LEVEL_COUNTY;
-        }
-        else{
-            queryFromServer(selectedCity.getCityCode(),countyTage);
+        } else {
+            queryFromServer(selectedCity.getCityCode(), countyTage);
         }
     }
 
@@ -150,7 +159,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
     private void queryFromServer(final String code, final String type) {
         String remoteAddress = "http://www.weather.com.cn/data/list3/city";
         String address;
-        if (TextUtils.isEmpty(code)) {
+        if (!TextUtils.isEmpty(code)) {
             address = remoteAddress + code + ".xml";
         } else {
             address = remoteAddress + ".xml";
