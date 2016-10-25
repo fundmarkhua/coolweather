@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.hua.coolweather.until.HttpCallbackListener;
+import com.example.hua.coolweather.until.HttpUtil;
+import com.example.hua.coolweather.until.Utility;
+
 public class WeatherActivity extends AppCompatActivity {
     private LinearLayout weatherInfoLayout;
     /**
@@ -97,6 +101,9 @@ public class WeatherActivity extends AppCompatActivity {
                 publishText.setText("同步中...");
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
                 String weatherCode =  prefs.getString("weather_code","");
+                if(!TextUtils.isEmpty(weatherCode)){
+                    queryWeatherInfo(weatherCode);
+                }
                 break;
             default:
                 break;
@@ -124,15 +131,50 @@ public class WeatherActivity extends AppCompatActivity {
      * 根据传入的代码和类型 去服务器查询天气代号或者天气信息
      */
     private void queryFromServer(final String address, final String type) {
+        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                if("countyCode".equals(type)){
+                    //从服务器解析天气代号
+                    String[] array = response.split("\\|");
+                    if(array!=null&&array.length==2){
+                        String weatherCode = array[1];
+                        queryWeatherInfo(weatherCode);
+                    }
+                }else if("weatherCode".equals(type)){
+                    Utility.handleWeatherResponse(WeatherActivity.this,response);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showWeather();
+                        }
+                    });
+                }
+            }
 
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        publishText.setText("同步失败");
+                    }
+                });
+            }
+        });
     }
 
     /**
      * 显示本地天气到界面 读取SharedPreferences
      */
     private void showWeather() {
-
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        cityNameText.setText(preferences.getString("city_name",""));
+        temp1Text.setText(preferences.getString("temp1",""));
+        temp2Text.setText(preferences.getString("temp2",""));
+        weatherDespText.setText(preferences.getString("weather_desp",""));
+        publishText.setText("今天"+preferences.getString("publis_time","")+"发布");
+        currentDateText.setText(preferences.getString("current_date",""));
+        weatherInfoLayout.setVisibility(View.VISIBLE);
     }
-
-
 }
