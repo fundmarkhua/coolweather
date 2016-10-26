@@ -64,7 +64,7 @@ public class WeatherActivity extends AppCompatActivity {
             //有区县代号就查询天气
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
-            cityNameText.setVisibility(View.INVISIBLE);
+            //cityNameText.setVisibility(View.INVISIBLE);
             queryWeatherCode(countyCode);
         } else {
             //没有区县代号就显示本地天气
@@ -189,6 +189,7 @@ public class WeatherActivity extends AppCompatActivity {
             weatherDespText.setText(preferences.getString("weather_desp", ""));
             publishText.setText("今天" + preferences.getString("publish_time", "") + "发布");
             currentDateText.setText(preferences.getString("current_date", ""));
+            cityNameText.setText(city_name);
             weatherInfoLayout.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());

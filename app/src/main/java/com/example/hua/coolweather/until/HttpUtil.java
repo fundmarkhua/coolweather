@@ -23,12 +23,24 @@ public class HttpUtil {
                     connection.setRequestMethod("GET");
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);
+                    connection.setRequestProperty("Accept-Charset", "utf-8");
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                     StringBuilder response = new StringBuilder();
                     String line;
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
+                    try {
+                        byte[] b = new byte[4096];
+                        for (int n; (n = in.read(b)) != -1; ) {
+                            response.append(new String(b, 0, n));
+                        }
+                        //          while ((line = reader.readLine()) != null) {
+                        //               response.append(line);
+                        //               LogUntil.w("coolweather", "1");
+                        //          }
+
+                    } catch (Exception e) {
+                        LogUntil.w("coolweather", "1");
+                        LogUntil.w("coolweather", e.toString());
                     }
                     if (listener != null) {
                         //回调onFinish()方法
@@ -38,9 +50,8 @@ public class HttpUtil {
                     LogUntil.w("coolweather", e.getMessage());
                     //回调onError()方法
                     listener.onError(e);
-                }
-                finally{
-                    if(connection!=null){
+                } finally {
+                    if (connection != null) {
                         //关闭连接
                         connection.disconnect();
                     }
