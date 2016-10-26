@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.hua.coolweather.until.HttpCallbackListener;
 import com.example.hua.coolweather.until.HttpUtil;
+import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.Utility;
 
 public class WeatherActivity extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class WeatherActivity extends AppCompatActivity {
         }
         InitView();
         String countyCode = getIntent().getStringExtra("county_code");
-        if (TextUtils.isEmpty(countyCode)) {
+        if (!TextUtils.isEmpty(countyCode)) {
             //有区县代号就查询天气
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
@@ -92,16 +93,16 @@ public class WeatherActivity extends AppCompatActivity {
     public void clickMethod(View v) {
         switch (v.getId()) {
             case R.id.switch_city:
-                Intent intent = new Intent(this,ChooseAreaActivity.class);
-                intent.putExtra("from_weather_activity",true);
+                Intent intent = new Intent(this, ChooseAreaActivity.class);
+                intent.putExtra("from_weather_activity", true);
                 startActivity(intent);
                 finish();
                 break;
             case R.id.refresh_weather:
                 publishText.setText("同步中...");
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                String weatherCode =  prefs.getString("weather_code","");
-                if(!TextUtils.isEmpty(weatherCode)){
+                String weatherCode = prefs.getString("weather_code", "");
+                if (!TextUtils.isEmpty(weatherCode)) {
                     queryWeatherInfo(weatherCode);
                 }
                 break;
@@ -123,7 +124,7 @@ public class WeatherActivity extends AppCompatActivity {
      * 查询天气代号所对应的天气
      */
     private void queryWeatherInfo(String weatherCode) {
-        String address = "http://www.weather.com.cn/data/cityinfo/city" + weatherCode + ".html";
+        String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
         queryFromServer(address, "weatherCode");
     }
 
@@ -131,50 +132,66 @@ public class WeatherActivity extends AppCompatActivity {
      * 根据传入的代码和类型 去服务器查询天气代号或者天气信息
      */
     private void queryFromServer(final String address, final String type) {
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-                if("countyCode".equals(type)){
-                    //从服务器解析天气代号
-                    String[] array = response.split("\\|");
-                    if(array!=null&&array.length==2){
-                        String weatherCode = array[1];
-                        queryWeatherInfo(weatherCode);
-                    }
-                }else if("weatherCode".equals(type)){
-                    Utility.handleWeatherResponse(WeatherActivity.this,response);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showWeather();
-                        }
-                    });
-                }
-            }
+        try{
 
-            @Override
-            public void onError(Exception e) {
-                runOnUiThread(new Runnable() {
+        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
                     @Override
-                    public void run() {
-                        publishText.setText("同步失败");
+                    public void onFinish(String response) {
+
+                        if ("countyCode".equals(type)) {
+                            //从服务器解析天气代号
+                            String[] array = response.split("\\|");
+                            if (array != null && array.length == 2) {
+                                String weatherCode = array[1];
+                                queryWeatherInfo(weatherCode);
+                            }
+                        } else if ("weatherCode".equals(type)) {
+                            Utility.handleWeatherResponse(WeatherActivity.this, response);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showWeather();
+                                }
+                            });
+                        }
                     }
-                });
-            }
-        });
+
+                    @Override
+                    public void onError(Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                publishText.setText("同步失败");
+                            }
+                        });
+                    }
+                }
+
+        );
+        }
+        catch(Exception e){
+            LogUntil.w("coolweather",e.getMessage());
+        }
     }
 
     /**
      * 显示本地天气到界面 读取SharedPreferences
      */
+
     private void showWeather() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        cityNameText.setText(preferences.getString("city_name",""));
-        temp1Text.setText(preferences.getString("temp1",""));
-        temp2Text.setText(preferences.getString("temp2",""));
-        weatherDespText.setText(preferences.getString("weather_desp",""));
-        publishText.setText("今天"+preferences.getString("publis_time","")+"发布");
-        currentDateText.setText(preferences.getString("current_date",""));
-        weatherInfoLayout.setVisibility(View.VISIBLE);
+        try {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String city_name = preferences.getString("city_name", "");
+            LogUntil.w("coolweather", "city_name is" + city_name);
+            cityNameText.setText(city_name);
+            temp1Text.setText(preferences.getString("temp1", ""));
+            temp2Text.setText(preferences.getString("temp2", ""));
+            weatherDespText.setText(preferences.getString("weather_desp", ""));
+            publishText.setText("今天" + preferences.getString("publish_time", "") + "发布");
+            currentDateText.setText(preferences.getString("current_date", ""));
+            weatherInfoLayout.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            LogUntil.w("coolweather", e.getMessage());
+        }
     }
 }

@@ -65,13 +65,19 @@ public class ChooseAreaActivity extends AppCompatActivity {
      * 当前选中级别
      */
     private int currentLevel;
+    /**
+     * 判断是否从WeatherActivity 中跳转过来。
+     */
+
+    private boolean isFromWeatherActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("city_selected",false)){
-            Intent intent = new Intent(this,WeatherActivity.class);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+        if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+            Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
             finish();
             return;
@@ -94,11 +100,10 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
-                }
-                else if (currentLevel == LEVEL_COUNTY) {
+                } else if (currentLevel == LEVEL_COUNTY) {
                     String countyCode = countyList.get(position).getCountyCode();
-                    Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
-                    intent.putExtra("county_code",countyCode);
+                    Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+                    intent.putExtra("county_code", countyCode);
                     startActivity(intent);
                     finish();
                 }
@@ -117,13 +122,11 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 dataList.clear();
                 for (Province province : provinceList) {
                     dataList.add(province.getProvinceName());
-                    LogUntil.w("coolWeather", province.getProvinceName());
                 }
                 adapter.notifyDataSetChanged();
                 listView.setSelection(0);
                 titleText.setText("国内");
                 currentLevel = LEVEL_PROVINCE;
-                LogUntil.w("coolWeather", "到这里");
             } else {
                 queryFromServer(null, provinceTage);
             }
@@ -256,6 +259,10 @@ public class ChooseAreaActivity extends AppCompatActivity {
         } else if (currentLevel == LEVEL_CITY) {
             queryProvince();
         } else {
+            if (isFromWeatherActivity) {
+                Intent intent = new Intent(this, WeatherActivity.class);
+                startActivity(intent);
+            }
             finish();
         }
     }

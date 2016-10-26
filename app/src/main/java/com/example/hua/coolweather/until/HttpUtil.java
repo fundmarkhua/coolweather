@@ -35,7 +35,7 @@ public class HttpUtil {
                         listener.onFinish(response.toString());
                     }
                 } catch (Exception e) {
-                    LogUntil.w("CoolWeather", e.getMessage());
+                    LogUntil.w("coolweather", e.getMessage());
                     //回调onError()方法
                     listener.onError(e);
                 }
