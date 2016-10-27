@@ -1,4 +1,4 @@
-package com.example.hua.coolweather.until;
+package com.example;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -26,18 +26,19 @@ public class HttpUtil {
                     connection.setRequestProperty("Accept-Charset", "utf-8");
                     InputStream in = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                   // BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+
+                    BufferedReader reader1 = new BufferedReader(new InputStreamReader(in, "UTF-8"),8);
                     StringBuilder response = new StringBuilder();
                     String line;
                     try {
-                        byte[] b = new byte[4096];
-                        for (int n; (n = in.read(b)) != -1; ) {
-                            response.append(new String(b, 0, n));
-                        }
-                     //             while ((line = reader.readLine()) != null) {
-                      //                response.append(line);
-                       //               LogUntil.w("coolweather", "1");
-                       //           }
+                    //    byte[] b = new byte[4096];
+                    //    for (int n; (n = in.read(b)) != -1; ) {
+                    //        response.append(new String(b, 0, n));
+                    //    }
+                                  while ((line = reader1.readLine()) != null) {
+                                      response.append(line);
+                                 }
+                        LogUntil.w("coolweather", "1");
 
                     } catch (Exception e) {
                         LogUntil.w("coolweather", "2");

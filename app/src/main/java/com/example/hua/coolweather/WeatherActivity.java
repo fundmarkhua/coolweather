@@ -125,6 +125,7 @@ public class WeatherActivity extends AppCompatActivity {
      */
     private void queryWeatherInfo(String weatherCode) {
         String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
+        LogUntil.w("coolweather",address);
         queryFromServer(address, "weatherCode");
     }
 
@@ -182,14 +183,12 @@ public class WeatherActivity extends AppCompatActivity {
         try {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             String city_name = preferences.getString("city_name", "");
-            LogUntil.w("coolweather", "city_name is" + city_name);
             cityNameText.setText(city_name);
             temp1Text.setText(preferences.getString("temp1", ""));
             temp2Text.setText(preferences.getString("temp2", ""));
             weatherDespText.setText(preferences.getString("weather_desp", ""));
             publishText.setText("今天" + preferences.getString("publish_time", "") + "发布");
             currentDateText.setText(preferences.getString("current_date", ""));
-            cityNameText.setText(city_name);
             weatherInfoLayout.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());
