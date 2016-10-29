@@ -1,6 +1,7 @@
 package com.example.hua.coolweather.until;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -25,8 +26,8 @@ public class HttpUtil {
                     connection.setReadTimeout(8000);
                     connection.setRequestProperty("Accept-Charset", "utf-8");
                     InputStream in = connection.getInputStream();
+                    /***/
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                   // BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
                     StringBuilder response = new StringBuilder();
                     String line;
                     try {
@@ -34,15 +35,13 @@ public class HttpUtil {
                         for (int n; (n = in.read(b)) != -1; ) {
                             response.append(new String(b, 0, n));
                         }
-                     //             while ((line = reader.readLine()) != null) {
-                      //                response.append(line);
-                       //               LogUntil.w("coolweather", "1");
-                       //           }
 
-                    } catch (Exception e) {
-                        LogUntil.w("coolweather", "2");
-                        LogUntil.w("coolweather", e.toString());
+                    } catch (EOFException e) {
+                       // LogUntil.w("coolweather", "2");
+                      //  LogUntil.w("coolweather", e.getMessage());
+                        e.printStackTrace();
                     }
+
                     if (listener != null) {
                         //回调onFinish()方法
                         listener.onFinish(response.toString());

@@ -11,9 +11,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.hua.coolweather.service.AutoUpdateService;
 import com.example.hua.coolweather.until.HttpCallbackListener;
 import com.example.hua.coolweather.until.HttpUtil;
 import com.example.hua.coolweather.until.LogUntil;
+import com.example.hua.coolweather.until.OKHttpUtil;
 import com.example.hua.coolweather.until.Utility;
 
 public class WeatherActivity extends AppCompatActivity {
@@ -64,7 +66,7 @@ public class WeatherActivity extends AppCompatActivity {
             //有区县代号就查询天气
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
-            //cityNameText.setVisibility(View.INVISIBLE);
+            cityNameText.setVisibility(View.INVISIBLE);
             queryWeatherCode(countyCode);
         } else {
             //没有区县代号就显示本地天气
@@ -190,6 +192,9 @@ public class WeatherActivity extends AppCompatActivity {
             publishText.setText("今天" + preferences.getString("publish_time", "") + "发布");
             currentDateText.setText(preferences.getString("current_date", ""));
             weatherInfoLayout.setVisibility(View.VISIBLE);
+            cityNameText.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());
         }
