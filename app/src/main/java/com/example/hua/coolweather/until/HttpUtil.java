@@ -36,9 +36,8 @@ public class HttpUtil {
                             response.append(new String(b, 0, n));
                         }
 
-                    } catch (EOFException e) {
-                       // LogUntil.w("coolweather", "2");
-                      //  LogUntil.w("coolweather", e.getMessage());
+                    } catch (Exception e) {
+                        LogUntil.w("coolweather", address+" out put error");
                         e.printStackTrace();
                     }
 

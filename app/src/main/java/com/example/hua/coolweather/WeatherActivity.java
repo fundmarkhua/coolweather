@@ -18,6 +18,9 @@ import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.OKHttpUtil;
 import com.example.hua.coolweather.until.Utility;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class WeatherActivity extends AppCompatActivity {
     private LinearLayout weatherInfoLayout;
     /**
@@ -103,9 +106,9 @@ public class WeatherActivity extends AppCompatActivity {
             case R.id.refresh_weather:
                 publishText.setText("同步中...");
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                String weatherCode = prefs.getString("weather_code", "");
+                String weatherCode = prefs.getString("city_name", "");
                 if (!TextUtils.isEmpty(weatherCode)) {
-                    queryWeatherInfo(weatherCode);
+                    queryWeatherInfo(weatherCode, "city");
                 }
                 break;
             default:
@@ -125,8 +128,17 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 查询天气代号所对应的天气
      */
-    private void queryWeatherInfo(String weatherCode) {
-        String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
+    private void queryWeatherInfo(String weatherCode,String type) {
+        if("city".equals(type)){
+            try {
+                weatherCode = URLEncoder.encode(weatherCode,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String address="http://wthrcdn.etouch.cn/weather_mini?"+type+"="+weatherCode;
+        //String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=101010100";
         LogUntil.w("coolweather",address);
         queryFromServer(address, "weatherCode");
     }
@@ -146,7 +158,7 @@ public class WeatherActivity extends AppCompatActivity {
                             String[] array = response.split("\\|");
                             if (array != null && array.length == 2) {
                                 String weatherCode = array[1];
-                                queryWeatherInfo(weatherCode);
+                                queryWeatherInfo(weatherCode,"citykey");
                             }
                         } else if ("weatherCode".equals(type)) {
                             Utility.handleWeatherResponse(WeatherActivity.this, response);
