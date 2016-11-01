@@ -185,7 +185,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
             address = remoteAddress + ".xml";
         }
         showProgressDialog();
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+        HttpUtil.sendOkHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 boolean result = false;

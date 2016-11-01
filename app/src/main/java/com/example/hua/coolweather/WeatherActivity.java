@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import com.example.hua.coolweather.service.AutoUpdateService;
 import com.example.hua.coolweather.until.HttpCallbackListener;
 import com.example.hua.coolweather.until.HttpUtil;
 import com.example.hua.coolweather.until.LogUntil;
-import com.example.hua.coolweather.until.OKHttpUtil;
 import com.example.hua.coolweather.until.Utility;
 
 import java.io.UnsupportedEncodingException;
@@ -47,14 +45,6 @@ public class WeatherActivity extends AppCompatActivity {
      * 用于显示当前日期
      */
     private TextView currentDateText;
-    /**
-     * 切换城市按钮
-     */
-    private Button switchCity;
-    /**
-     * 更新天气按钮
-     */
-    private Button refreshWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +78,6 @@ public class WeatherActivity extends AppCompatActivity {
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
         currentDateText = (TextView) findViewById(R.id.current_date);
-        switchCity = (Button) findViewById(R.id.switch_city);
-        refreshWeather = (Button) findViewById(R.id.refresh_weather);
     }
 
     /**
@@ -138,7 +126,6 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         String address="http://wthrcdn.etouch.cn/weather_mini?"+type+"="+weatherCode;
-        //String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=101010100";
         LogUntil.w("coolweather",address);
         queryFromServer(address, "weatherCode");
     }
@@ -149,7 +136,7 @@ public class WeatherActivity extends AppCompatActivity {
     private void queryFromServer(final String address, final String type) {
         try{
 
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+        HttpUtil.sendOkHttpRequest(address, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
 
@@ -201,12 +188,12 @@ public class WeatherActivity extends AppCompatActivity {
             temp1Text.setText(preferences.getString("temp1", ""));
             temp2Text.setText(preferences.getString("temp2", ""));
             weatherDespText.setText(preferences.getString("weather_desp", ""));
-            publishText.setText("今天" + preferences.getString("publish_time", "") + "发布");
+            publishText.setText(preferences.getString("publish_time", "") + " 更新");
             currentDateText.setText(preferences.getString("current_date", ""));
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
-            Intent intent = new Intent(this, AutoUpdateService.class);
-            startService(intent);
+            //Intent intent = new Intent(this, AutoUpdateService.class);
+            //startService(intent);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());
         }

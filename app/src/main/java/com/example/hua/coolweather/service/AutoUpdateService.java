@@ -14,6 +14,9 @@ import com.example.hua.coolweather.until.HttpUtil;
 import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.Utility;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by Administrator on 2016/10/28.
  * 自动更新天气信息类
@@ -48,13 +51,17 @@ public class AutoUpdateService extends Service {
     private void updateWeather() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherCode = preferences.getString("weather_code","");
-        String address = "http://www.weather.com.cn/data/cityinfo/"+weatherCode+".html";
-        HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+        try {
+            weatherCode = URLEncoder.encode(weatherCode,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String address="http://wthrcdn.etouch.cn/weather_mini?city="+weatherCode;
+        HttpUtil.sendOkHttpRequest(address, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 Utility.handleWeatherResponse(AutoUpdateService.this,response);
             }
-
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
