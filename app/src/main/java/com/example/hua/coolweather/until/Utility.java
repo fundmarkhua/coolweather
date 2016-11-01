@@ -12,6 +12,7 @@ import com.example.hua.coolweather.model.County;
 import com.example.hua.coolweather.model.Province;
 import com.example.hua.coolweather.model.WeatherInfo;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -94,15 +95,22 @@ public class Utility {
     public static void handleWeatherResponse(Context context, String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-            WeatherInfo weatherInfoObj = new WeatherInfo();
-            weatherInfoObj.setCityName(weatherInfo.getString("city"));
-            weatherInfoObj.setWeatherCode(weatherInfo.getString("cityid"));
-            weatherInfoObj.setTemp1(weatherInfo.getString("temp1"));
-            weatherInfoObj.setTemp2(weatherInfo.getString("temp2"));
-            weatherInfoObj.setWeatherDesp(weatherInfo.getString("weather"));
-            weatherInfoObj.setPublishTime(weatherInfo.getString("ptime"));
-            saveWeatherInfo(context, weatherInfoObj);
+            JSONObject weatherData = jsonObject.getJSONObject("data");
+            JSONArray weatherArray = weatherData.getJSONArray("forecast");
+            if(weatherArray.length()>1){
+                JSONObject weatherInfo = weatherArray.getJSONObject(0);
+                WeatherInfo weatherInfoObj = new WeatherInfo();
+                weatherInfoObj.setCityName(weatherData.getString("city"));
+                weatherInfoObj.setWeatherCode(weatherData.getString("city"));
+                String high =  weatherInfo.getString("high");
+                String low = weatherInfo.getString("low");
+                weatherInfoObj.setTemp1(high.replace("高温",""));
+                weatherInfoObj.setTemp2(low.replace("低温",""));
+                weatherInfoObj.setWeatherDesp(weatherInfo.getString("type"));
+                weatherInfoObj.setPublishTime(weatherInfo.getString("date"));
+                saveWeatherInfo(context, weatherInfoObj);
+            }
+
         } catch (JSONException e) {
             LogUntil.w("coolWeather",e.getMessage());
             e.printStackTrace();
@@ -114,14 +122,16 @@ public class Utility {
      */
     public static void saveWeatherInfo(Context context, WeatherInfo weatherInfo) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+        SimpleDateFormat hour = new SimpleDateFormat("M月d日 HH:mm", Locale.CHINA);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
         editor.putBoolean("city_selected", true);
         editor.putString("city_name", weatherInfo.getCityName());
         editor.putString("weather_code", weatherInfo.getWeatherCode());
         editor.putString("temp1", weatherInfo.getTemp1());
         editor.putString("temp2", weatherInfo.getTemp2());
         editor.putString("weather_desp", weatherInfo.getWeatherDesp());
-        editor.putString("publish_time", weatherInfo.getPublishTime());
+        editor.putString("publish_time", hour.format(new Date()));
         editor.putString("current_date", sdf.format(new Date()));
         editor.commit();
     }
