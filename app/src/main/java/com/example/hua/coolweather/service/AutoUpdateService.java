@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
+import com.example.hua.coolweather.WeatherActivity;
 import com.example.hua.coolweather.until.HttpCallbackListener;
 import com.example.hua.coolweather.until.HttpUtil;
 import com.example.hua.coolweather.until.LogUntil;

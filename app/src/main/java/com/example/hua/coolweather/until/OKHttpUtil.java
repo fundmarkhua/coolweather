@@ -24,13 +24,7 @@ public class OKHttpUtil {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String postBody = ""
-                        + "Releases\n"
-                        + "--------\n"
-                        + "\n"
-                        + " * _1.0_ May 6, 2013\n"
-                        + " * _1.1_ June 15, 2013\n"
-                        + " * _1.2_ August 11, 2013\n";
+
                 HttpURLConnection connection = null;
                 try {
                     OkHttpClient client = new OkHttpClient();

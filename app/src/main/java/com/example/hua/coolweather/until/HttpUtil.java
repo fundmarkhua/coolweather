@@ -1,5 +1,7 @@
 package com.example.hua.coolweather.until;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
@@ -22,7 +24,6 @@ public class HttpUtil {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HttpURLConnection connection = null;
                 try {
                     OkHttpClient client = new OkHttpClient();
                     Request request = new Request.Builder()
@@ -32,6 +33,7 @@ public class HttpUtil {
                     Response response = client.newCall(request).execute();
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
                     String result = response.body().string();
+
                     if (listener != null) {
                         //回调onFinish()方法
                         LogUntil.w("coolweather", "233 "+result);
@@ -42,10 +44,6 @@ public class HttpUtil {
                     //回调onError()方法
                     listener.onError(e);
                 } finally {
-                    if (connection != null) {
-                        //关闭连接
-                        connection.disconnect();
-                    }
                 }
             }
         }).start();

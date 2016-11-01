@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 
 import com.example.hua.coolweather.db.CoolWeatherDB;
@@ -92,28 +94,34 @@ public class Utility {
     /**
      * 解析服务器返回的JSON数据，并将解析出的数据存储到本地。
      */
-    public static void handleWeatherResponse(Context context, String response) {
+    public static boolean handleWeatherResponse(Context context, String response) {
         try {
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject weatherData = jsonObject.getJSONObject("data");
-            JSONArray weatherArray = weatherData.getJSONArray("forecast");
-            if(weatherArray.length()>1){
-                JSONObject weatherInfo = weatherArray.getJSONObject(0);
-                WeatherInfo weatherInfoObj = new WeatherInfo();
-                weatherInfoObj.setCityName(weatherData.getString("city"));
-                weatherInfoObj.setWeatherCode(weatherData.getString("city"));
-                String high =  weatherInfo.getString("high");
-                String low = weatherInfo.getString("low");
-                weatherInfoObj.setTemp1(high.replace("高温",""));
-                weatherInfoObj.setTemp2(low.replace("低温",""));
-                weatherInfoObj.setWeatherDesp(weatherInfo.getString("type"));
-                weatherInfoObj.setPublishTime(weatherInfo.getString("date"));
-                saveWeatherInfo(context, weatherInfoObj);
+            int status = jsonObject.getInt("status");
+            if (status == 1000) {
+                JSONObject weatherData = jsonObject.getJSONObject("data");
+                JSONArray weatherArray = weatherData.getJSONArray("forecast");
+                if (weatherArray.length() > 1) {
+                    JSONObject weatherInfo = weatherArray.getJSONObject(0);
+                    WeatherInfo weatherInfoObj = new WeatherInfo();
+                    weatherInfoObj.setCityName(weatherData.getString("city"));
+                    weatherInfoObj.setWeatherCode(weatherData.getString("city"));
+                    String high = weatherInfo.getString("high");
+                    String low = weatherInfo.getString("low");
+                    weatherInfoObj.setTemp1(high.replace("高温", ""));
+                    weatherInfoObj.setTemp2(low.replace("低温", ""));
+                    weatherInfoObj.setWeatherDesp(weatherInfo.getString("type"));
+                    weatherInfoObj.setPublishTime(weatherInfo.getString("date"));
+                    saveWeatherInfo(context, weatherInfoObj);
+                    return true;
+                }
             }
+            return false;
 
         } catch (JSONException e) {
-            LogUntil.w("coolWeather",e.getMessage());
+            LogUntil.w("coolWeather", e.getMessage());
             e.printStackTrace();
+            return false;
         }
     }
 

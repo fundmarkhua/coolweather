@@ -214,6 +214,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 }
             }
 
+
             @Override
             public void onError(Exception e) {
                 //用runOnUiThread()方法回到主线程处理逻辑

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hua.coolweather.service.AutoUpdateService;
 import com.example.hua.coolweather.until.HttpCallbackListener;
@@ -116,17 +117,17 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 查询天气代号所对应的天气
      */
-    private void queryWeatherInfo(String weatherCode,String type) {
-        if("city".equals(type)){
+    private void queryWeatherInfo(String weatherCode, String type) {
+        if ("city".equals(type)) {
             try {
-                weatherCode = URLEncoder.encode(weatherCode,"UTF-8");
+                weatherCode = URLEncoder.encode(weatherCode, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
 
-        String address="http://wthrcdn.etouch.cn/weather_mini?"+type+"="+weatherCode;
-        LogUntil.w("coolweather",address);
+        String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
+        LogUntil.w("coolweather", address);
         queryFromServer(address, "weatherCode");
     }
 
@@ -134,45 +135,56 @@ public class WeatherActivity extends AppCompatActivity {
      * 根据传入的代码和类型 去服务器查询天气代号或者天气信息
      */
     private void queryFromServer(final String address, final String type) {
-        try{
+        try {
 
-        HttpUtil.sendOkHttpRequest(address, new HttpCallbackListener() {
-                    @Override
-                    public void onFinish(String response) {
+            HttpUtil.sendOkHttpRequest(address, new HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String response) {
 
-                        if ("countyCode".equals(type)) {
-                            //从服务器解析天气代号
-                            String[] array = response.split("\\|");
-                            if (array != null && array.length == 2) {
-                                String weatherCode = array[1];
-                                queryWeatherInfo(weatherCode,"citykey");
+                            if ("countyCode".equals(type)) {
+                                //从服务器解析天气代号
+                                String[] array = response.split("\\|");
+                                if (array != null && array.length == 2) {
+                                    String weatherCode = array[1];
+                                    queryWeatherInfo(weatherCode, "citykey");
+                                }
+                            } else if ("weatherCode".equals(type)) {
+                                if(Utility.handleWeatherResponse(WeatherActivity.this, response))
+                                {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showWeather();
+                                        }
+                                    });
+                                }
+                                else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(WeatherActivity.this, "当前查询城市暂时无数据", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    showWeather();
+                                }
+
                             }
-                        } else if ("weatherCode".equals(type)) {
-                            Utility.handleWeatherResponse(WeatherActivity.this, response);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    showWeather();
+                                    publishText.setText("同步失败");
                                 }
                             });
                         }
                     }
 
-                    @Override
-                    public void onError(Exception e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                publishText.setText("同步失败");
-                            }
-                        });
-                    }
-                }
-
-        );
-        }
-        catch(Exception e){
-            LogUntil.w("coolweather",e.getMessage());
+            );
+        } catch (Exception e) {
+            LogUntil.w("coolweather", e.getMessage());
         }
     }
 
@@ -183,6 +195,9 @@ public class WeatherActivity extends AppCompatActivity {
     private void showWeather() {
         try {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            if (preferences==null){
+                queryWeatherInfo("101010100", "citykey");
+            }
             String city_name = preferences.getString("city_name", "");
             cityNameText.setText(city_name);
             temp1Text.setText(preferences.getString("temp1", ""));
