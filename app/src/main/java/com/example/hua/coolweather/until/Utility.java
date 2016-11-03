@@ -126,6 +126,19 @@ public class Utility {
     }
 
     /**
+     * 解析服务器返回的XML数据，并将解析出的数据存储到本地。
+     */
+    public static boolean handleWeatherResponseXml(Context context, String response) {
+        try {
+            return true;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 将服务器返回的所有天气信息存储到SharedPreferences文件中。
      */
     public static void saveWeatherInfo(Context context, WeatherInfo weatherInfo) {
