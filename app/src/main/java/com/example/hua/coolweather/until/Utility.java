@@ -144,19 +144,60 @@ public class Utility {
             xmlPullParser.setInput(new StringReader(response));
             int eventType = xmlPullParser.getEventType();
             WeatherInfoMore weatherInfoMore = new WeatherInfoMore();
+            int tagType = 1;//解析阶段 1,主数据 2,空气数据  3,昨日数据 4,五日天气
+            int fiveNode = 1;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String nodeName = xmlPullParser.getName();
+
                 switch (eventType) {
                     //  开始解析某个结点
                     case XmlPullParser.START_TAG: {
-                        if ("city".equals(nodeName)) {
-                            weatherInfoMore.setCityName(xmlPullParser.nextText());
+                        //主数据
+                        if (tagType == 1) {
+                            if ("city".equals(nodeName)) {
+                                weatherInfoMore.setCityName(xmlPullParser.nextText());
+                            } else if ("updatetime".equals(nodeName)) {
+                                weatherInfoMore.setPublishTime(xmlPullParser.nextText());
+                            } else if ("wendu".equals(nodeName)) {
+                                weatherInfoMore.setWendu(xmlPullParser.nextText());
+                            } else if ("fengli".equals(nodeName)) {
+                                weatherInfoMore.setFengli(xmlPullParser.nextText());
+                            } else if ("shidu".equals(nodeName)) {
+                                weatherInfoMore.setShidu(xmlPullParser.nextText());
+                            } else if ("fengxiang".equals(nodeName)) {
+                                weatherInfoMore.setFengxiang(xmlPullParser.nextText());
+                            } else if ("sunrise_1".equals(nodeName)) {
+                                weatherInfoMore.setSunRise(xmlPullParser.nextText());
+                            } else if ("sunset_1".equals(nodeName)) {
+                                weatherInfoMore.setSunSet(xmlPullParser.nextText());
+                            }
                         }
-                        else if ("updatetime".equals(nodeName)) {
-                            weatherInfoMore.setPublishTime(xmlPullParser.nextText());
+                        //空气数据
+                        if (tagType == 2) {
+                            if ("aqi".equals(nodeName)) {
+                                weatherInfoMore.setAqi(xmlPullParser.nextText());
+                            } else if ("quality".equals(nodeName)) {
+                                weatherInfoMore.setQuality(xmlPullParser.nextText());
+                            }
                         }
-                        else if ("wendu".equals(nodeName)) {
-                            weatherInfoMore.setWendu(xmlPullParser.nextText());
+                        //五日数据
+                        if (tagType == 3) {
+
+                            //第一天  今天
+                            if (fiveNode == 1) {
+                                if ("high".equals(nodeName)) {
+                                    weatherInfoMore.setTemp1(xmlPullParser.nextText());
+                                } else if ("low".equals(nodeName)) {
+                                    weatherInfoMore.setTemp2(xmlPullParser.nextText());
+                                }
+                                else if ("low".equals(nodeName)) {
+                                    weatherInfoMore.setTemp2(xmlPullParser.nextText());
+                                }
+                            }
+                            //第二天 明天
+                            if (fiveNode == 2) {
+
+                            }
                         }
                         break;
                     }
@@ -175,7 +216,6 @@ public class Utility {
 
             return true;
         } catch (Exception e) {
-
             e.printStackTrace();
             return false;
         }

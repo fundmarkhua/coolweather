@@ -15,7 +15,7 @@ public class WeatherInfoMore {
     private String aqi;
     //空气质量描述
     private String quality;
-    //空气质量 日出
+    //日出
     private String sunRise;
     //日落
     private String sunSet;
@@ -29,11 +29,35 @@ public class WeatherInfoMore {
     private String ganmaoDesp;
 
     //明日气温情况
-    private String yestemp1;
-    private String yestemp2;
-    private String yesWeatherDesp;
+    private String tomtemp1;
+    private String tomtemp2;
+    private String tomWeatherDesp;
+
+    public String getTomWeatherDesp() {
+        return tomWeatherDesp;
+    }
+
+    public void setTomWeatherDesp(String tomWeatherDesp) {
+        this.tomWeatherDesp = tomWeatherDesp;
+    }
+
+    public String getTomtemp2() {
+        return tomtemp2;
+    }
+
+    public void setTomtemp2(String tomtemp2) {
+        this.tomtemp2 = tomtemp2;
+    }
 
     private String publishTime;
+
+    public String getTomtemp1() {
+        return tomtemp1;
+    }
+
+    public void setTomtemp1(String tomtemp1) {
+        this.tomtemp1 = tomtemp1;
+    }
 
     public String getCityName() {
         return cityName;
@@ -145,30 +169,6 @@ public class WeatherInfoMore {
 
     public void setGanmaoDesp(String ganmaoDesp) {
         this.ganmaoDesp = ganmaoDesp;
-    }
-
-    public String getYestemp1() {
-        return yestemp1;
-    }
-
-    public void setYestemp1(String yestemp1) {
-        this.yestemp1 = yestemp1;
-    }
-
-    public String getYestemp2() {
-        return yestemp2;
-    }
-
-    public void setYestemp2(String yestemp2) {
-        this.yestemp2 = yestemp2;
-    }
-
-    public String getYesWeatherDesp() {
-        return yesWeatherDesp;
-    }
-
-    public void setYesWeatherDesp(String yesWeatherDesp) {
-        this.yesWeatherDesp = yesWeatherDesp;
     }
 
     public String getPublishTime() {
