@@ -126,9 +126,11 @@ public class WeatherActivity extends AppCompatActivity {
             }
         }
 
-        String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
+        //String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
+        String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey" + "=" + weatherCode;
         LogUntil.w("coolweather", address);
-        queryFromServer(address, "weatherCode");
+        //queryFromServer(address, "weatherCode");
+        queryFromServer(address, "weatherCodeXml");
     }
 
     /**
@@ -150,6 +152,28 @@ public class WeatherActivity extends AppCompatActivity {
                                 }
                             } else if ("weatherCode".equals(type)) {
                                 if(Utility.handleWeatherResponse(WeatherActivity.this, response))
+                                {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showWeather();
+                                        }
+                                    });
+                                }
+                                else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(WeatherActivity.this, "当前查询城市暂时无数据", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    showWeather();
+                                }
+
+                            }
+                            //测试
+                            else if ("weatherCodeXml".equals(type)) {
+                                if(Utility.handleWeatherResponseXml(WeatherActivity.this, response))
                                 {
                                     runOnUiThread(new Runnable() {
                                         @Override

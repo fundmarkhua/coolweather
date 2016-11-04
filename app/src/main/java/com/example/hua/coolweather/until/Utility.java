@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
 
 import com.example.hua.coolweather.db.CoolWeatherDB;
@@ -13,13 +15,20 @@ import com.example.hua.coolweather.model.City;
 import com.example.hua.coolweather.model.County;
 import com.example.hua.coolweather.model.Province;
 import com.example.hua.coolweather.model.WeatherInfo;
+import com.example.hua.coolweather.model.WeatherInfoMore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.util.Date;
 import java.util.Locale;
+
+import static android.R.attr.id;
+import static android.R.attr.name;
+import static android.R.attr.version;
 
 /**
  * Created by fundmarkhua on 2016/10/18.
@@ -130,6 +139,40 @@ public class Utility {
      */
     public static boolean handleWeatherResponseXml(Context context, String response) {
         try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser xmlPullParser = factory.newPullParser();
+            xmlPullParser.setInput(new StringReader(response));
+            int eventType = xmlPullParser.getEventType();
+            WeatherInfoMore weatherInfoMore = new WeatherInfoMore();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String nodeName = xmlPullParser.getName();
+                switch (eventType) {
+                    //  开始解析某个结点
+                    case XmlPullParser.START_TAG: {
+                        if ("city".equals(nodeName)) {
+                            weatherInfoMore.setCityName(xmlPullParser.nextText());
+                        }
+                        else if ("updatetime".equals(nodeName)) {
+                            weatherInfoMore.setPublishTime(xmlPullParser.nextText());
+                        }
+                        else if ("wendu".equals(nodeName)) {
+                            weatherInfoMore.setWendu(xmlPullParser.nextText());
+                        }
+                        break;
+                    }
+                    //  完成解析某个结点
+                    case XmlPullParser.END_TAG: {
+                        if ("app".equals(nodeName)) {
+
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                eventType = xmlPullParser.next();
+            }
+
             return true;
         } catch (Exception e) {
 
