@@ -144,8 +144,10 @@ public class Utility {
             xmlPullParser.setInput(new StringReader(response));
             int eventType = xmlPullParser.getEventType();
             WeatherInfoMore weatherInfoMore = new WeatherInfoMore();
-            int tagType = 1;//解析阶段 1,主数据 2,空气数据  3,昨日数据 4,五日天气
-            int fiveNode = 1;
+            int tagType = 1;//解析阶段 1,主数据 2,空气数据  3,五日天气  4,指数
+            int fiveNode = 1; //五日天气 天数判断
+            int zhishutype = 1;//天气指数判断
+            boolean isDay = false;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String nodeName = xmlPullParser.getName();
 
@@ -180,32 +182,74 @@ public class Utility {
                                 weatherInfoMore.setQuality(xmlPullParser.nextText());
                             }
                         }
-                        //五日数据
+                        //五日数据  天气情况读取白天的
                         if (tagType == 3) {
-
                             //第一天  今天
                             if (fiveNode == 1) {
+                                //判断白天还是黑夜
+                                if ("day".equals(nodeName)) {
+                                    isDay = true;
+                                } else if ("night".equals(nodeName)) {
+                                    isDay = false;
+                                }
+
                                 if ("high".equals(nodeName)) {
                                     weatherInfoMore.setTemp1(xmlPullParser.nextText());
                                 } else if ("low".equals(nodeName)) {
                                     weatherInfoMore.setTemp2(xmlPullParser.nextText());
-                                }
-                                else if ("low".equals(nodeName)) {
-                                    weatherInfoMore.setTemp2(xmlPullParser.nextText());
+                                } else if ("type".equals(nodeName) && isDay) {
+                                    weatherInfoMore.setWeatherDesp(xmlPullParser.nextText());
                                 }
                             }
                             //第二天 明天
                             if (fiveNode == 2) {
+                                //判断白天还是黑夜
+                                if ("day".equals(nodeName)) {
+                                    isDay = true;
+                                } else if ("night".equals(nodeName)) {
+                                    isDay = false;
+                                }
 
+                                if ("high".equals(nodeName)) {
+                                    weatherInfoMore.setTomtemp1(xmlPullParser.nextText());
+                                } else if ("low".equals(nodeName)) {
+                                    weatherInfoMore.setTomtemp2(xmlPullParser.nextText());
+                                } else if ("type".equals(nodeName) && isDay) {
+                                    weatherInfoMore.setTomWeatherDesp(xmlPullParser.nextText());
+                                }
                             }
                         }
+                        //各项指数
+                        if (tagType == 4) {
+                            if ("value".equals(nodeName) && zhishutype == 4) {
+                                //感冒指数
+                                weatherInfoMore.setGanmaoDesp(xmlPullParser.nextText());
+                            } else if ("value".equals(nodeName) && zhishutype == 9) {
+                                //运动指数
+                                weatherInfoMore.setSportDesp(xmlPullParser.nextText());
+                            }
+                        }
+
                         break;
                     }
                     //  完成解析某个结点
                     case XmlPullParser.END_TAG: {
-                        if ("app".equals(nodeName)) {
-
+                        if ("sunset_2".equals(nodeName)) {
+                            tagType = 2;//开始解析空气数据
+                        } else if ("yesterday".equals(nodeName)) {
+                            tagType = 3;//开始解析五日天气数据
+                        } else if ("forecast".equals(nodeName)) {
+                            tagType = 4;//开始解析指数数据
                         }
+                        //五日天气日期切换判断
+                        if ("weather".equals(nodeName) && tagType == 3) {
+                            fiveNode++;
+                        }
+                        //五日天气日期切换判断
+                        if ("zhishu".equals(nodeName) && tagType == 4) {
+                            zhishutype++;
+                        }
+
                         break;
                     }
                     default:
