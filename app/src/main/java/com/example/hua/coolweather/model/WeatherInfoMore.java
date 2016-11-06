@@ -32,6 +32,7 @@ public class WeatherInfoMore {
     private String tomtemp1;
     private String tomtemp2;
     private String tomWeatherDesp;
+    private String publishTime;
 
     public String getTomWeatherDesp() {
         return tomWeatherDesp;
@@ -48,8 +49,6 @@ public class WeatherInfoMore {
     public void setTomtemp2(String tomtemp2) {
         this.tomtemp2 = tomtemp2;
     }
-
-    private String publishTime;
 
     public String getTomtemp1() {
         return tomtemp1;

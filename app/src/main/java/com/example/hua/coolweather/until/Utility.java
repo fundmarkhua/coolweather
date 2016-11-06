@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
@@ -25,10 +23,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.util.Date;
 import java.util.Locale;
-
-import static android.R.attr.id;
-import static android.R.attr.name;
-import static android.R.attr.version;
 
 /**
  * Created by fundmarkhua on 2016/10/18.
@@ -245,11 +239,10 @@ public class Utility {
                         if ("weather".equals(nodeName) && tagType == 3) {
                             fiveNode++;
                         }
-                        //五日天气日期切换判断
+                        //指数类型判断
                         if ("zhishu".equals(nodeName) && tagType == 4) {
                             zhishutype++;
                         }
-
                         break;
                     }
                     default:
@@ -257,7 +250,7 @@ public class Utility {
                 }
                 eventType = xmlPullParser.next();
             }
-
+            saveWeatherInfoXml(context, weatherInfoMore);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,7 +261,7 @@ public class Utility {
     /**
      * 将服务器返回的所有天气信息存储到SharedPreferences文件中。
      */
-    public static void saveWeatherInfo(Context context, WeatherInfo weatherInfo) {
+    private static void saveWeatherInfo(Context context, WeatherInfo weatherInfo) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
         SimpleDateFormat hour = new SimpleDateFormat("M月d日 HH:mm", Locale.CHINA);
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -280,6 +273,36 @@ public class Utility {
         editor.putString("temp2", weatherInfo.getTemp2());
         editor.putString("weather_desp", weatherInfo.getWeatherDesp());
         editor.putString("publish_time", hour.format(new Date()));
+        editor.putString("current_date", sdf.format(new Date()));
+        editor.commit();
+    }
+
+    /**
+     * 将服务器返回的XML格式所有天气信息存储到SharedPreferences文件中。
+     */
+    private static void saveWeatherInfoXml(Context context, WeatherInfoMore weatherInfoMore) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+        editor.putBoolean("city_selected", true);
+        editor.putString("city_name", weatherInfoMore.getCityName());
+        editor.putString("wendu", weatherInfoMore.getWendu());
+        editor.putString("fengxiang",weatherInfoMore.getFengxiang());
+        editor.putString("fengli",weatherInfoMore.getFengli());
+        editor.putString("shidu",weatherInfoMore.getShidu());
+        editor.putString("aqi",weatherInfoMore.getAqi());
+        editor.putString("quality",weatherInfoMore.getQuality());
+        editor.putString("sunRise",weatherInfoMore.getSunRise());
+        editor.putString("sunSet",weatherInfoMore.getSunSet());
+        editor.putString("temp1", weatherInfoMore.getTemp1());
+        editor.putString("temp2", weatherInfoMore.getTemp2());
+        editor.putString("weather_desp", weatherInfoMore.getWeatherDesp());
+        editor.putString("sportDesp", weatherInfoMore.getSportDesp());
+        editor.putString("ganmaoDesp", weatherInfoMore.getGanmaoDesp());
+        editor.putString("tomtemp1", weatherInfoMore.getTomtemp1());
+        editor.putString("tomtemp2", weatherInfoMore.getTomtemp2());
+        editor.putString("tomWeatherDesp", weatherInfoMore.getTomWeatherDesp());
+        editor.putString("publish_time", weatherInfoMore.getPublishTime());
         editor.putString("current_date", sdf.format(new Date()));
         editor.commit();
     }
