@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,20 +52,25 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:textColor="#FFF"
+            tools:text="19:30:25 更新"
             android:textSize="18sp" />
 
         <LinearLayout
             android:id="@+id/weather_info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/publish_text"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/current_date"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:layout_gravity="center"
                 android:gravity="center"
+                tools:text="2016-11-8 星期二"
                 android:textColor="#FFF"
                 android:textSize="18sp" />
 
@@ -74,6 +80,7 @@
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
+                tools:text="阴转小雨"
                 android:textColor="#FFF"
                 android:textSize="40sp" />
 
@@ -88,6 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    tools:text="10℃"
                     android:textColor="#FFF"
                     android:textSize="40sp" />
 
@@ -107,8 +115,25 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="#FFF"
+                    tools:text="22℃"
                     android:textSize="40sp" />
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/today_tom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical" >
+            <TextView
+                android:id="@+id/tex_tom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="#FFF"
+                tools:text="22℃"
+                android:textSize="40sp" />
         </LinearLayout>
     </RelativeLayout>
 
