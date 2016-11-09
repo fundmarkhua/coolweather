@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#484E61" >
+        android:background="#484E61">
 
         <Button
             android:id="@+id/switch_city"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:onClick="clickMethod"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
-            android:background="@drawable/home" />
+            android:background="@drawable/home"
+            android:onClick="clickMethod" />
 
         <TextView
             android:id="@+id/city_name"
@@ -31,18 +31,18 @@
             android:id="@+id/refresh_weather"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:onClick="clickMethod"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/refresh" />
+            android:background="@drawable/refresh"
+            android:onClick="clickMethod" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#27A5F9" >
+        android:background="#27A5F9">
 
         <TextView
             android:id="@+id/publish_text"
@@ -52,32 +52,32 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:textColor="#FFF"
-            tools:text="19:30:25 更新"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="19:30:25 更新" />
 
         <LinearLayout
             android:id="@+id/weather_info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             android:layout_alignParentStart="true"
             android:layout_below="@id/publish_text"
-            android:orientation="vertical" >
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="180dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal" >
+                android:layout_height="62dp"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/tex_wendu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    tools:text="18℃"
                     android:textColor="#FFF"
-                    android:textSize="50sp" />
+                    android:textSize="50sp"
+                    tools:text="18℃" />
 
                 <TextView
                     android:id="@+id/tex_type"
@@ -86,52 +86,102 @@
                     android:layout_margin="@dimen/activity_bottom_margin"
                     android:layout_toEndOf="@id/tex_wendu"
                     android:textColor="#FFF"
-                    tools:text="阴天"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    tools:text="阴天" />
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal" >
+            <RelativeLayout
+                android:layout_width="200dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center_horizontal">
 
                 <TextView
-                    android:id="@+id/temp1"
+                    android:id="@+id/tex_fengli"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    tools:text="10℃"
+                    android:layout_alignParentStart="true"
                     android:textColor="#FFF"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    tools:text="偏北风3级" />
 
                 <TextView
+                    android:id="@+id/tex_shidu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/fenge"
+                    android:layout_marginStart="@dimen/activity_bottom_margin"
+                    android:layout_toEndOf="@id/tex_fengli"
                     android:textColor="#FFF"
-                    android:textSize="20sp" />
+                    android:textSize="18sp"
+                    tools:text="湿度 87%" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="220dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/tex_aqi_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    tools:text="空气指数" />
+                <TextView
+                    android:id="@+id/tex_aqi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/tex_aqi_img"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    tools:text="187" />
 
                 <TextView
-                    android:id="@+id/temp2"
+                    android:id="@+id/tex_quality"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/activity_bottom_margin"
+                    android:layout_toEndOf="@id/tex_aqi"
                     android:textColor="#FFF"
-                    tools:text="22℃"
-                    android:textSize="20sp" />
-            </LinearLayout>
+                    android:textSize="18sp"
+                    tools:text="重度污染" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="230dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/tex_sport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    tools:text="运动:较不宜" />
+
+                <TextView
+                    android:id="@+id/tex_ganmao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_bottom_margin"
+                    android:layout_toEndOf="@id/tex_sport"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    tools:text="感冒:较易发" />
+
+            </RelativeLayout>
+
         </LinearLayout>
+
         <RelativeLayout
+            android:id="@+id/weather_bottom"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="#484E61" >
+            android:background="#484E61">
 
             <TextView
                 android:id="@+id/tex_today"
@@ -140,39 +190,42 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="今天"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="今天" />
+
             <TextView
                 android:id="@+id/tex_today_wendu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/dashedLine"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="21/15 ℃"
+                android:layout_toStartOf="@id/dashedLine"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="21/15 ℃" />
+
             <TextView
                 android:id="@+id/tex_today_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="阴"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="阴" />
+
             <TextView
                 android:id="@+id/tex_today_feng"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/dashedLine"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="微风"
+                android:layout_toStartOf="@id/dashedLine"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="微风" />
 
             <com.example.hua.coolweather.ui.DashedLine
                 android:id="@+id/dashedLine"
@@ -184,12 +237,13 @@
                 android:id="@+id/tex_tom_"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/dashedLine"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="明天"
+                android:layout_toEndOf="@id/dashedLine"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="明天" />
+
             <TextView
                 android:id="@+id/tex_tom_wendu"
                 android:layout_width="wrap_content"
@@ -197,29 +251,31 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="21/15 ℃"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="21/15 ℃" />
+
             <TextView
                 android:id="@+id/tex_tom_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/dashedLine"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="阴"
+                android:layout_toEndOf="@id/dashedLine"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="阴" />
+
             <TextView
                 android:id="@+id/tex_tom_feng"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                tools:text="微风"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="微风" />
         </RelativeLayout>
     </RelativeLayout>
 
