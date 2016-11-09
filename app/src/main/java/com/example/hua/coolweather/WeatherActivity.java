@@ -75,10 +75,10 @@ public class WeatherActivity extends AppCompatActivity {
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
         cityNameText = (TextView) findViewById(R.id.city_name);
         publishText = (TextView) findViewById(R.id.publish_text);
-        weatherDespText = (TextView) findViewById(R.id.weather_desp);
+        //weatherDespText = (TextView) findViewById(R.id.weather_desp);
         temp1Text = (TextView) findViewById(R.id.temp1);
         temp2Text = (TextView) findViewById(R.id.temp2);
-        currentDateText = (TextView) findViewById(R.id.current_date);
+        //currentDateText = (TextView) findViewById(R.id.current_date);
     }
 
     /**
