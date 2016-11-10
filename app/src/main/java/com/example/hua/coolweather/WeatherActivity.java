@@ -17,6 +17,8 @@ import com.example.hua.coolweather.until.HttpUtil;
 import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.Utility;
 
+import org.w3c.dom.Text;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -33,19 +35,60 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 用于显示天气描述
      */
-    private TextView weatherDespText;
+    private TextView textType;
     /**
-     * 用于显示气温1
+     * 用于显示实时温度
      */
-    private TextView temp1Text;
+    private TextView textWendu;
     /**
-     * 用于显示气温2
+     * 用于显示风力风向
      */
-    private TextView temp2Text;
+    private TextView textFengli;
     /**
-     * 用于显示当前日期
+     * 用于显示湿度
      */
-    private TextView currentDateText;
+    private TextView textShidu;
+    /**
+     * 用于显示空气指数
+     */
+    private TextView textAqi;
+    /**
+     * 用于显示空气质量
+     */
+    private TextView textQuality;
+    /**
+     * 用于显示运动指数
+     */
+    private TextView textSport;
+    /**
+     * 用于显示感冒指数
+     */
+    private TextView textGanmao;
+    /**
+     * 用于显示今日温度
+     */
+    private TextView texTodayWendu;
+    /**
+     * 用于显示今日天气
+     */
+    private TextView texTodayType;
+    /**
+     * 用于显示今日风力
+     */
+    private TextView texTodayFeng;
+    /**
+     * 用于显示明日温度
+     */
+    private TextView texTomWendu;
+    /**
+     * 用于显示明日天气
+     */
+    private TextView texTomType;
+    /**
+     * 用于显示明日风力
+     */
+    private TextView textTomFeng;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +118,23 @@ public class WeatherActivity extends AppCompatActivity {
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
         cityNameText = (TextView) findViewById(R.id.city_name);
         publishText = (TextView) findViewById(R.id.publish_text);
-        //weatherDespText = (TextView) findViewById(R.id.weather_desp);
-        temp1Text = (TextView) findViewById(R.id.temp1);
-        temp2Text = (TextView) findViewById(R.id.temp2);
-        //currentDateText = (TextView) findViewById(R.id.current_date);
+        textType = (TextView)findViewById(R.id.tex_type);
+        textWendu = (TextView)findViewById(R.id.tex_wendu);
+        textFengli = (TextView)findViewById(R.id.tex_fengli);
+        textShidu = (TextView)findViewById(R.id.tex_shidu);
+        textAqi= (TextView)findViewById(R.id.tex_aqi);
+        textQuality= (TextView)findViewById(R.id.tex_quality);
+        textSport= (TextView)findViewById(R.id.tex_sport);
+        textGanmao= (TextView)findViewById(R.id.tex_ganmao);
+        texTodayWendu= (TextView)findViewById(R.id.tex_aqi);
+        texTodayType= (TextView)findViewById(R.id.tex_aqi);
+        texTodayFeng= (TextView)findViewById(R.id.tex_aqi);
+        textAqi= (TextView)findViewById(R.id.tex_aqi);
+        textAqi= (TextView)findViewById(R.id.tex_aqi);
+        textAqi= (TextView)findViewById(R.id.tex_aqi);
+
+
+
     }
 
     /**
@@ -224,11 +280,8 @@ public class WeatherActivity extends AppCompatActivity {
             }
             String city_name = preferences.getString("city_name", "");
             cityNameText.setText(city_name);
-            temp1Text.setText(preferences.getString("temp1", ""));
-            temp2Text.setText(preferences.getString("temp2", ""));
-            weatherDespText.setText(preferences.getString("weather_desp", ""));
-            publishText.setText(preferences.getString("publish_time", "") + " 更新");
-            currentDateText.setText(preferences.getString("current_date", ""));
+            textType.setText(preferences.getString("weather_desp", ""));
+            publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
             //Intent intent = new Intent(this, AutoUpdateService.class);
