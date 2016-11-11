@@ -200,7 +200,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                android:layout_toStartOf="@id/dashedLine"
+                android:layout_toStartOf="@+id/middleLine"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:text="21/15 ℃" />
@@ -215,23 +215,23 @@
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:text="阴" />
-
             <TextView
                 android:id="@+id/tex_today_feng"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                android:layout_toStartOf="@id/dashedLine"
+                android:layout_toStartOf="@+id/middleLine"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:text="微风" />
 
             <com.example.hua.coolweather.ui.DashedLine
-                android:id="@+id/dashedLine"
+                android:id="@+id/middleLine"
                 android:layout_width="1px"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true" />
+
 
             <TextView
                 android:id="@+id/tex_tom_"
@@ -239,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                android:layout_toEndOf="@id/dashedLine"
+                android:layout_toEndOf="@id/middleLine"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:text="明天" />
@@ -261,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="@dimen/activity_bottom_margin"
-                android:layout_toEndOf="@id/dashedLine"
+                android:layout_toEndOf="@id/middleLine"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:text="阴" />

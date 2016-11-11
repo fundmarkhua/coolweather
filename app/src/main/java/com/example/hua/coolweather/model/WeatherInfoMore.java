@@ -32,6 +32,7 @@ public class WeatherInfoMore {
     private String tomtemp1;
     private String tomtemp2;
     private String tomWeatherDesp;
+
     private String publishTime;
 
     public String getTomWeatherDesp() {

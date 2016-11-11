@@ -118,21 +118,20 @@ public class WeatherActivity extends AppCompatActivity {
         weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
         cityNameText = (TextView) findViewById(R.id.city_name);
         publishText = (TextView) findViewById(R.id.publish_text);
-        textType = (TextView)findViewById(R.id.tex_type);
-        textWendu = (TextView)findViewById(R.id.tex_wendu);
-        textFengli = (TextView)findViewById(R.id.tex_fengli);
-        textShidu = (TextView)findViewById(R.id.tex_shidu);
-        textAqi= (TextView)findViewById(R.id.tex_aqi);
-        textQuality= (TextView)findViewById(R.id.tex_quality);
-        textSport= (TextView)findViewById(R.id.tex_sport);
-        textGanmao= (TextView)findViewById(R.id.tex_ganmao);
-        texTodayWendu= (TextView)findViewById(R.id.tex_aqi);
-        texTodayType= (TextView)findViewById(R.id.tex_aqi);
-        texTodayFeng= (TextView)findViewById(R.id.tex_aqi);
-        textAqi= (TextView)findViewById(R.id.tex_aqi);
-        textAqi= (TextView)findViewById(R.id.tex_aqi);
-        textAqi= (TextView)findViewById(R.id.tex_aqi);
-
+        textType = (TextView) findViewById(R.id.tex_type);
+        textWendu = (TextView) findViewById(R.id.tex_wendu);
+        textFengli = (TextView) findViewById(R.id.tex_fengli);
+        textShidu = (TextView) findViewById(R.id.tex_shidu);
+        textAqi = (TextView) findViewById(R.id.tex_aqi);
+        textQuality = (TextView) findViewById(R.id.tex_quality);
+        textSport = (TextView) findViewById(R.id.tex_sport);
+        textGanmao = (TextView) findViewById(R.id.tex_ganmao);
+        texTodayWendu = (TextView) findViewById(R.id.tex_aqi);
+        texTodayType = (TextView) findViewById(R.id.tex_aqi);
+        texTodayFeng = (TextView) findViewById(R.id.tex_aqi);
+        textAqi = (TextView) findViewById(R.id.tex_aqi);
+        textAqi = (TextView) findViewById(R.id.tex_aqi);
+        textAqi = (TextView) findViewById(R.id.tex_aqi);
 
 
     }
@@ -207,16 +206,14 @@ public class WeatherActivity extends AppCompatActivity {
                                     queryWeatherInfo(weatherCode, "citykey");
                                 }
                             } else if ("weatherCode".equals(type)) {
-                                if(Utility.handleWeatherResponse(WeatherActivity.this, response))
-                                {
+                                if (Utility.handleWeatherResponse(WeatherActivity.this, response)) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             showWeather();
                                         }
                                     });
-                                }
-                                else{
+                                } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -229,16 +226,14 @@ public class WeatherActivity extends AppCompatActivity {
                             }
                             //测试
                             else if ("weatherCodeXml".equals(type)) {
-                                if(Utility.handleWeatherResponseXml(WeatherActivity.this, response))
-                                {
+                                if (Utility.handleWeatherResponseXml(WeatherActivity.this, response)) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             showWeather();
                                         }
                                     });
-                                }
-                                else{
+                                } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -275,13 +270,31 @@ public class WeatherActivity extends AppCompatActivity {
     private void showWeather() {
         try {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (preferences==null){
+            if (preferences == null) {
                 queryWeatherInfo("101010100", "citykey");
             }
-            String city_name = preferences.getString("city_name", "");
-            cityNameText.setText(city_name);
-            textType.setText(preferences.getString("weather_desp", ""));
-            publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
+            try {
+                cityNameText.setText(preferences.getString("city_name", ""));
+                textType.setText(preferences.getString("weather_desp", ""));
+                publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
+                textWendu.setText(preferences.getString("温度", ""));
+                textFengli.setText(String.valueOf(preferences.getString("fengxiang", "") + preferences.getString("fengli", "")));
+                textShidu.setText(preferences.getString("shidu", ""));
+                textAqi.setText(preferences.getString("aqi", ""));
+                textQuality.setText(preferences.getString("quality", ""));
+                textSport.setText(preferences.getString("sportDesp", ""));
+                textGanmao.setText(preferences.getString("ganmaoDesp", ""));
+                texTodayWendu.setText(String.valueOf(preferences.getString("temp1", "") + preferences.getString("temp2", "")));
+                texTodayType.setText(preferences.getString("weather_desp", ""));
+                texTodayFeng.setText("");
+                textTomFeng.setText("");
+                texTomType.setText(preferences.getString("tomWeatherDesp", ""));
+                texTomWendu.setText(String.valueOf(preferences.getString("tomtemp1", "") + preferences.getString("tomtemp2", "")));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
             //Intent intent = new Intent(this, AutoUpdateService.class);
