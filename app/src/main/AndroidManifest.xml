@@ -48,7 +48,7 @@
         <!-- meta-data需要写在application中 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="vc8gixf5F6k7789nX9nscmiG" />
+            android:value="lcZb3i3dX0jfjzIh3kFuQiMN1NiR6XQU" />
     </application>
 
 </manifest>

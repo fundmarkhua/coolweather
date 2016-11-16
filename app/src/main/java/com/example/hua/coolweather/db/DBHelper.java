@@ -51,14 +51,10 @@ public class DBHelper extends SQLiteOpenHelper {
     /**
      * 在SQLiteOpenHelper的子类当中，必须有该构造函数
      *
-     * @param context
-     *            上下文对象
-     * @param name
-     *            数据库名称
-     * @param factory
-     *            一般都是null
-     * @param version
-     *            当前数据库的版本，值必须是整数并且是递增的状态
+     * @param context 上下文对象
+     * @param name    数据库名称
+     * @param factory 一般都是null
+     * @param version 当前数据库的版本，值必须是整数并且是递增的状态
      */
     public DBHelper(Context context, String name, CursorFactory factory,
                     int version) {
@@ -112,18 +108,19 @@ public class DBHelper extends SQLiteOpenHelper {
                     SQLiteDatabase.OPEN_READONLY);
         } catch (SQLiteException e) {
             // database does't exist yet.
+        } finally {
+            if (checkDB != null) {
+                checkDB.close();
+            }
         }
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        return checkDB != null ? true : false;
+        return checkDB != null;
     }
 
     /**
      * Copies your database from your local assets-folder to the just created
      * empty database in the system folder, from where it can be accessed and
      * handled. This is done by transfering bytestream.
-     * */
+     */
     private void copyDataBase() throws IOException {
         // Open your local db as the input stream
         InputStream myInput = myContext.getAssets().open(ASSETS_NAME);

@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,7 +48,7 @@ import com.example.hua.coolweather.until.PingYinUtil;
 import com.example.hua.coolweather.db.DatabaseHelper;
 import com.example.hua.coolweather.db.DBHelper;
 
-public class ChooseCityActivity extends Activity implements OnScrollListener {
+public class ChooseCityActivity extends AppCompatActivity implements OnScrollListener {
     private BaseAdapter adapter;
     private ResultListAdapter resultListAdapter;
     private ListView personList;
@@ -587,6 +588,14 @@ public class ChooseCityActivity extends Activity implements OnScrollListener {
     protected void onStop() {
         mLocationClient.stop();
         super.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WindowManager windowManager = (WindowManager) this
+                .getSystemService(Context.WINDOW_SERVICE);
+        windowManager.removeView(overlay);
+
     }
 
     class HotCityAdapter extends BaseAdapter {
