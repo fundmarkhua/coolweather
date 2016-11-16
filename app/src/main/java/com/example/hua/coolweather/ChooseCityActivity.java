@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -56,19 +55,15 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
     private TextView overlay; // 对话框首字母textview
     private MyLetterListView letterListView; // A-Z listview
     private HashMap<String, Integer> alphaIndexer;// 存放存在的汉语拼音首字母和与之对应的列表位置
-    private String[] sections;// 存放存在的汉语拼音首字母
     private Handler handler;
     private OverlayThread overlayThread; // 显示首字母对话框
     private ArrayList<CityInfo> allCity_lists; // 所有城市列表
-    private ArrayList<CityInfo> city_lists;// 城市列表
     private ArrayList<CityInfo> city_hot;
     private ArrayList<CityInfo> city_result;
     private ArrayList<String> city_history;
-    private EditText sh;
     private TextView tv_noresult;
 
     private LocationClient mLocationClient;
-    private MyLocationListener mMyLocationListener;
 
     private String currentCity; // 用于保存定位到的城市
     private int locateProcess = 1; // 记录当前定位的状态 正在定位-定位成功-定位失败
@@ -80,6 +75,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        EditText sh;//搜索输入框
         personList = (ListView) findViewById(R.id.list_view);
         allCity_lists = new ArrayList<>();
         city_hot = new ArrayList<>();
@@ -166,6 +162,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         setAdapter(allCity_lists, city_hot, city_history);
 
         mLocationClient = new LocationClient(this.getApplicationContext());
+        MyLocationListener mMyLocationListener;
         mMyLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(mMyLocationListener);
         InitLocation();
@@ -206,6 +203,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
     }
 
     private void cityInit() {
+        ArrayList<CityInfo> city_lists; //城市列表
         CityInfo cityInfo = new CityInfo("定位", "0"); // 当前定位城市
         allCity_lists.add(cityInfo);
         cityInfo = new CityInfo("最近", "1"); // 最近访问的城市
@@ -418,7 +416,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
             this.hotList = hotList;
             this.hisCity = hisCity;
             alphaIndexer = new HashMap<String, Integer>();
-            sections = new String[list.size()];
+            String[] sections = new String[list.size()]; //存放存在的汉语拼音首字母
             for (int i = 0; i < list.size(); i++) {
                 // 当前汉语拼音首字母
                 String currentStr = getAlpha(list.get(i).getPinyi());
