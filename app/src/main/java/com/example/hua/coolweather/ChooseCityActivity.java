@@ -8,12 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -68,13 +75,34 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
     private String currentCity; // 用于保存定位到的城市
     private int locateProcess = 1; // 记录当前定位的状态 正在定位-定位成功-定位失败
     private boolean isNeedFresh;
-
     private DatabaseHelper helper;
+    /**
+     * 判断是否从WeatherActivity 中跳转过来。
+     */
+    private boolean isFromWeatherActivity;
+
+    //用于权限判断
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE = 2;
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE = 3;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL = 4;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+        if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         setContentView(R.layout.main);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         EditText sh;//搜索输入框
         personList = (ListView) findViewById(R.id.list_view);
         allCity_lists = new ArrayList<>();
@@ -123,7 +151,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         letterListView = (MyLetterListView) findViewById(R.id.MyLetterListView01);
         letterListView
                 .setOnTouchingLetterChangedListener(new LetterListViewListener());
-        alphaIndexer = new HashMap<String, Integer>();
+        alphaIndexer = new HashMap<>();
         handler = new Handler();
         overlayThread = new OverlayThread();
         isNeedFresh = true;
@@ -133,10 +161,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if (position >= 4) {
-
-                    Toast.makeText(getApplicationContext(),
-                            allCity_lists.get(position).getName(),
-                            Toast.LENGTH_SHORT).show();
+                    toIntent(allCity_lists.get(position).getName());
                 }
             }
         });
@@ -146,15 +171,13 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         resultListAdapter = new ResultListAdapter(this, city_result);
         resultList.setAdapter(resultListAdapter);
         resultList.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(getApplicationContext(),
-                        city_result.get(position).getName(), Toast.LENGTH_SHORT)
-                        .show();
+                toIntent(city_result.get(position).getName());
             }
         });
+        checkPermission();
         initOverlay();
         cityInit();
         hotCityInit();
@@ -167,6 +190,83 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         mLocationClient.registerLocationListener(mMyLocationListener);
         InitLocation();
         mLocationClient.start();
+    }
+
+    /**
+     * 根据选定的城市，跳转到相应的天气预报界面
+     *
+     * @param countyCode 天气代码
+     */
+    private void toIntent(String countyCode) {
+
+        Intent intent = new Intent(ChooseCityActivity.this, WeatherActivity.class);
+        intent.putExtra("county_code", countyCode);
+        startActivity(intent);
+        finish();
+    }
+
+    private void checkPermission() {
+        //网络定位
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_COARSE);
+        }
+        //gps定位
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE);
+        }
+        //读取手机状态
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_REQUEST_READ_PHONE);
+        }
+        //读写存储卡
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //处理权限请求
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "授权请求被拒绝了", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        //处理权限请求
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_FINE) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "授权请求被拒绝了", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        //处理权限请求
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "授权请求被拒绝了", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        //处理权限请求
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "授权请求被拒绝了", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void InsertCity(String name) {
@@ -183,23 +283,22 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
 
     private void InitLocation() {
         // 设置定位参数
-        LocationClientOption option = new LocationClientOption();
-        option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(10000); // 10分钟扫描1次
-        // 需要地址信息，设置为其他任何值（string类型，且不能为null）时，都表示无地址信息。
-        option.setAddrType("all");
-        // 设置是否返回POI的电话和地址等详细信息。默认值为false，即不返回POI的电话和地址信息。
-        option.setPoiExtraInfo(true);
-        // 设置产品线名称。强烈建议您使用自定义的产品线名称，方便我们以后为您提供更高效准确的定位服务。
-        option.setProdName("通过GPS定位我当前的位置");
-        // 禁用启用缓存定位数据
-        option.disableCache(true);
-        // 设置最多可返回的POI个数，默认值为3。由于POI查询比较耗费流量，设置最多返回的POI个数，以便节省流量。
-        option.setPoiNumber(3);
-        // 设置定位方式的优先级。
-        // 当gps可用，而且获取了定位结果时，不再发起网络请求，直接返回给用户坐标。这个选项适合希望得到准确坐标位置的用户。如果gps不可用，再发起网络请求，进行定位。
-        option.setPriority(LocationClientOption.GpsFirst);
-        mLocationClient.setLocOption(option);
+        LocationClientOption mOption = new LocationClientOption();
+        mOption = new LocationClientOption();
+        mOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        mOption.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
+        mOption.setScanSpan(3000);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        mOption.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        mOption.setIsNeedLocationDescribe(true);//可选，设置是否需要地址描述
+        mOption.setNeedDeviceDirect(false);//可选，设置是否需要设备方向结果
+        mOption.setLocationNotify(false);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        mOption.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        mOption.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        mOption.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        mOption.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+
+        mOption.setIsNeedAltitude(false);//可选，默认false，设置定位时是否需要海拔信息，默认不需要，除基础定位版本都可用
+        mLocationClient.setLocOption(mOption);
     }
 
     private void cityInit() {
@@ -331,7 +430,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
 
         @Override
         public void onReceiveLocation(BDLocation arg0) {
-            Log.e("info", "city = " + arg0.getCity());
+            Log.e("info", "city = " + arg0.getAddrStr());
             if (!isNeedFresh) {
                 return;
             }
@@ -347,11 +446,6 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
             locateProcess = 2; // 定位成功
             personList.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onReceivePoi(BDLocation arg0) {
-
         }
     }
 
@@ -471,10 +565,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
                     @Override
                     public void onClick(View v) {
                         if (locateProcess == 2) {
-
-                            Toast.makeText(getApplicationContext(),
-                                    city.getText().toString(),
-                                    Toast.LENGTH_SHORT).show();
+                            toIntent(city.getText().toString());
                         } else if (locateProcess == 3) {
                             locateProcess = 1;
                             personList.setAdapter(adapter);
@@ -516,10 +607,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-
-                        Toast.makeText(getApplicationContext(),
-                                city_history.get(position), Toast.LENGTH_SHORT)
-                                .show();
+                        toIntent(city_history.get(position));
 
                     }
                 });
@@ -536,9 +624,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
 
-                        Toast.makeText(getApplicationContext(),
-                                city_hot.get(position).getName(),
-                                Toast.LENGTH_SHORT).show();
+                        toIntent(city_hot.get(position).getName());
 
                     }
                 });
@@ -587,6 +673,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         mLocationClient.stop();
         super.onStop();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

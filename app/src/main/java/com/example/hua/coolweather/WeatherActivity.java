@@ -104,11 +104,12 @@ public class WeatherActivity extends AppCompatActivity {
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
             cityNameText.setVisibility(View.INVISIBLE);
-            queryWeatherCode(countyCode);
+            queryWeatherInfo(countyCode,"city");
         } else {
             //没有区县代号就显示本地天气
             showWeather();
         }
+        LogUntil.w("coolweather","3321");
     }
 
     /**
@@ -126,12 +127,12 @@ public class WeatherActivity extends AppCompatActivity {
         textQuality = (TextView) findViewById(R.id.tex_quality);
         textSport = (TextView) findViewById(R.id.tex_sport);
         textGanmao = (TextView) findViewById(R.id.tex_ganmao);
-        texTodayWendu = (TextView) findViewById(R.id.tex_aqi);
-        texTodayType = (TextView) findViewById(R.id.tex_aqi);
-        texTodayFeng = (TextView) findViewById(R.id.tex_aqi);
-        textAqi = (TextView) findViewById(R.id.tex_aqi);
-        textAqi = (TextView) findViewById(R.id.tex_aqi);
-        textAqi = (TextView) findViewById(R.id.tex_aqi);
+        texTodayWendu = (TextView) findViewById(R.id.tex_today_wendu);
+        texTodayType = (TextView) findViewById(R.id.tex_today_type);
+        texTodayFeng = (TextView) findViewById(R.id.tex_today_feng);
+        texTomWendu = (TextView) findViewById(R.id.tex_tom_wendu);
+        texTomType = (TextView) findViewById(R.id.tex_tom_type);
+        textTomFeng = (TextView) findViewById(R.id.tex_tom_feng);
 
 
     }
@@ -142,7 +143,7 @@ public class WeatherActivity extends AppCompatActivity {
     public void clickMethod(View v) {
         switch (v.getId()) {
             case R.id.switch_city:
-                Intent intent = new Intent(this, ChooseAreaActivity.class);
+                Intent intent = new Intent(this, ChooseCityActivity.class);
                 intent.putExtra("from_weather_activity", true);
                 startActivity(intent);
                 finish();
@@ -182,7 +183,7 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         //String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
-        String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey" + "=" + weatherCode;
+        String address = "http://wthrcdn.etouch.cn/WeatherApi?" +type+ "=" + weatherCode;
         LogUntil.w("coolweather", address);
         //queryFromServer(address, "weatherCode");
         queryFromServer(address, "weatherCodeXml");
@@ -297,8 +298,8 @@ public class WeatherActivity extends AppCompatActivity {
 
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
-            //Intent intent = new Intent(this, AutoUpdateService.class);
-            //startService(intent);
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());
         }

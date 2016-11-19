@@ -106,7 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             checkDB = SQLiteDatabase.openDatabase(myPath, null,
                     SQLiteDatabase.OPEN_READONLY);
-        } catch (SQLiteException e) {
+        } catch (Exception e) {
             // database does't exist yet.
         } finally {
             if (checkDB != null) {

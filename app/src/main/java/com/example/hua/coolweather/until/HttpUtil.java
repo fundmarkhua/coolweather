@@ -36,7 +36,6 @@ public class HttpUtil {
 
                     if (listener != null) {
                         //回调onFinish()方法
-                        LogUntil.w("coolweather", "233 "+result);
                         listener.onFinish(result);
                     }
                 } catch (Exception e) {

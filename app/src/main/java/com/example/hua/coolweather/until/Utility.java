@@ -150,7 +150,10 @@ public class Utility {
                     case XmlPullParser.START_TAG: {
                         //主数据
                         if (tagType == 1) {
-                            if ("city".equals(nodeName)) {
+                            if ("error".equals(nodeName)) {
+                                return false;
+                            }
+                            else if ("city".equals(nodeName)) {
                                 weatherInfoMore.setCityName(xmlPullParser.nextText());
                             } else if ("updatetime".equals(nodeName)) {
                                 weatherInfoMore.setPublishTime(xmlPullParser.nextText());
