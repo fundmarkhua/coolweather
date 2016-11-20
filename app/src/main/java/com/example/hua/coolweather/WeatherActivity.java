@@ -134,7 +134,6 @@ public class WeatherActivity extends AppCompatActivity {
         texTomType = (TextView) findViewById(R.id.tex_tom_type);
         textTomFeng = (TextView) findViewById(R.id.tex_tom_feng);
 
-
     }
 
     /**
@@ -181,7 +180,6 @@ public class WeatherActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         //String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
         String address = "http://wthrcdn.etouch.cn/WeatherApi?" +type+ "=" + weatherCode;
         LogUntil.w("coolweather", address);
@@ -271,10 +269,12 @@ public class WeatherActivity extends AppCompatActivity {
     private void showWeather() {
         try {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            if (preferences == null) {
-                queryWeatherInfo("101010100", "citykey");
-            }
             try {
+                String citynames = preferences.getString("city_name", "");
+                if(citynames.equals("")){
+                    queryWeatherInfo("101010100", "citykey");
+                }
+                LogUntil.w("coolweather",citynames);
                 cityNameText.setText(preferences.getString("city_name", ""));
                 textType.setText(preferences.getString("weather_desp", ""));
                 publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
@@ -298,8 +298,8 @@ public class WeatherActivity extends AppCompatActivity {
 
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
-            Intent intent = new Intent(this, AutoUpdateService.class);
-            startService(intent);
+//            Intent intent = new Intent(this, AutoUpdateService.class);
+//            startService(intent);
         } catch (Exception e) {
             LogUntil.w("coolweather", e.getMessage());
         }

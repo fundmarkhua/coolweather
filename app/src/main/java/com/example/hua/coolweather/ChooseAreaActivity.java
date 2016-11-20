@@ -68,7 +68,6 @@ public class ChooseAreaActivity extends AppCompatActivity {
     /**
      * 判断是否从WeatherActivity 中跳转过来。
      */
-
     private boolean isFromWeatherActivity;
 
     @Override

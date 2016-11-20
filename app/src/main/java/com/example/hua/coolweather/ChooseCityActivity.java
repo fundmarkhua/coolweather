@@ -50,6 +50,7 @@ import com.baidu.location.LocationClientOption;
 import com.example.hua.coolweather.ui.MyLetterListView.OnTouchingLetterChangedListener;
 import com.example.hua.coolweather.model.CityInfo;
 import com.example.hua.coolweather.ui.MyLetterListView;
+import com.example.hua.coolweather.until.LogUntil;
 import com.example.hua.coolweather.until.PingYinUtil;
 import com.example.hua.coolweather.db.DatabaseHelper;
 import com.example.hua.coolweather.db.DBHelper;
@@ -71,7 +72,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
     private TextView tv_noresult;
 
     private LocationClient mLocationClient;
-
+    private WindowManager windowManager;
     private String currentCity; // 用于保存定位到的城市
     private int locateProcess = 1; // 记录当前定位的状态 正在定位-定位成功-定位失败
     private boolean isNeedFresh;
@@ -97,7 +98,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
             finish();
-            return;
+            // return;
         }
         setContentView(R.layout.main);
         if (getSupportActionBar() != null) {
@@ -198,7 +199,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
      * @param countyCode 天气代码
      */
     private void toIntent(String countyCode) {
-
+        mLocationClient.stop();
         Intent intent = new Intent(ChooseCityActivity.this, WeatherActivity.class);
         intent.putExtra("county_code", countyCode);
         startActivity(intent);
@@ -676,11 +677,9 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        WindowManager windowManager = (WindowManager) this
-                .getSystemService(Context.WINDOW_SERVICE);
         windowManager.removeView(overlay);
-
+        LogUntil.w("coolweather","onDestroy");
+        super.onDestroy();
     }
 
     class HotCityAdapter extends BaseAdapter {
@@ -767,7 +766,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 PixelFormat.TRANSLUCENT);
-        WindowManager windowManager = (WindowManager) this
+        windowManager = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
         windowManager.addView(overlay, lp);
     }
@@ -858,4 +857,18 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
             handler.postDelayed(overlayThread, 1000);
         }
     }
+
+    /**
+     * 捕获back按键 根据当前状态来判断，应该反馈 哪一级列表 或者直接退出
+     */
+    @Override
+    public void onBackPressed() {
+
+        if (isFromWeatherActivity) {
+            Intent intent = new Intent(this, WeatherActivity.class);
+            startActivity(intent);
+        }
+        finish();
+    }
+
 }
