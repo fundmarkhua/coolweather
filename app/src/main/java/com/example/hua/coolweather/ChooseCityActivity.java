@@ -97,8 +97,8 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
+
             finish();
-            // return;
         }
         setContentView(R.layout.main);
         if (getSupportActionBar() != null) {
@@ -203,6 +203,8 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         Intent intent = new Intent(ChooseCityActivity.this, WeatherActivity.class);
         intent.putExtra("county_code", countyCode);
         startActivity(intent);
+        mLocationClient.stop();
+        windowManager.removeView(overlay);
         finish();
     }
 
@@ -671,13 +673,15 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
 
     @Override
     protected void onStop() {
-        mLocationClient.stop();
+        //mLocationClient.stop();
+        //windowManager.removeView(overlay);
+        LogUntil.w("coolweather","onStop");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        windowManager.removeView(overlay);
+
         LogUntil.w("coolweather","onDestroy");
         super.onDestroy();
     }
