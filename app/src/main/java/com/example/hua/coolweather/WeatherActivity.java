@@ -278,13 +278,13 @@ public class WeatherActivity extends AppCompatActivity {
                 cityNameText.setText(preferences.getString("city_name", ""));
                 textType.setText(preferences.getString("weather_desp", ""));
                 publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
-                textWendu.setText(preferences.getString("wendu", ""));
+                textWendu.setText(preferences.getString("wendu", "")+"℃");
                 textFengli.setText(String.valueOf(preferences.getString("fengxiang", "") + preferences.getString("fengli", "")));
-                textShidu.setText("湿度 "+preferences.getString("shidu", ""));
-                textAqi.setText("空气指数 "+preferences.getString("aqi", ""));
+                textShidu.setText("湿度:"+preferences.getString("shidu", ""));
+                textAqi.setText("空气指数:"+preferences.getString("aqi", ""));
                 textQuality.setText(preferences.getString("quality", ""));
-                textSport.setText("运动 "+preferences.getString("sportDesp", ""));
-                textGanmao.setText("感冒 "+preferences.getString("ganmaoDesp", ""));
+                textSport.setText("运动:"+preferences.getString("sportDesp", ""));
+                textGanmao.setText("感冒:"+preferences.getString("ganmaoDesp", ""));
                 texTodayWendu.setText(String.valueOf(preferences.getString("temp1", "") + preferences.getString("temp2", "")));
                 texTodayType.setText(preferences.getString("weather_desp", ""));
                 texTodayFeng.setText("");

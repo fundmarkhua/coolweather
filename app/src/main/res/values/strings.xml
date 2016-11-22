@@ -5,4 +5,6 @@
     <string name="chooseCity">切换城市</string>
     <string name="inputCityName">输入城市名或拼音</string>
     <string name="noCity">抱歉,暂时没有找到相关城市</string>
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
 </resources>
