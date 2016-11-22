@@ -97,7 +97,12 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);
-
+            if(mLocationClient.isStarted()){
+                mLocationClient.stop();
+            }
+            if(overlay.getParent()!=null) {
+                windowManager.removeView(overlay);
+            }
             finish();
         }
         setContentView(R.layout.main);
@@ -199,12 +204,15 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
      * @param countyCode 天气代码
      */
     private void toIntent(String countyCode) {
-        mLocationClient.stop();
         Intent intent = new Intent(ChooseCityActivity.this, WeatherActivity.class);
         intent.putExtra("county_code", countyCode);
         startActivity(intent);
-        mLocationClient.stop();
-        windowManager.removeView(overlay);
+        if(mLocationClient.isStarted()){
+            mLocationClient.stop();
+        }
+        if(overlay.getParent()!=null) {
+            windowManager.removeView(overlay);
+        }
         finish();
     }
 
@@ -673,15 +681,17 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
 
     @Override
     protected void onStop() {
-        //mLocationClient.stop();
-        //windowManager.removeView(overlay);
-        LogUntil.w("coolweather","onStop");
+        if(mLocationClient.isStarted()){
+            mLocationClient.stop();
+        }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-
+        if(overlay.getParent()!=null) {
+            windowManager.removeView(overlay);
+        }
         LogUntil.w("coolweather","onDestroy");
         super.onDestroy();
     }
