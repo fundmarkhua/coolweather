@@ -39,6 +39,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/weather_all_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -74,7 +75,7 @@
                     android:id="@+id/tex_wendu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
                     android:textColor="#FFF"
                     android:textSize="50sp"
                     tools:text="18℃" />
@@ -100,10 +101,10 @@
                     android:id="@+id/tex_fengli"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
                     android:textColor="#FFF"
                     android:textSize="18sp"
-                    tools:text="北风2级" />
+                    tools:text="北风2级 湿度 87%" />
 
                 <TextView
                     android:id="@+id/tex_shidu"
@@ -113,7 +114,7 @@
                     android:layout_toEndOf="@id/tex_fengli"
                     android:textColor="#FFF"
                     android:textSize="18sp"
-                    tools:text="湿度 87%" />
+                    tools:text="" />
 
             </RelativeLayout>
             <RelativeLayout
@@ -124,28 +125,19 @@
                     android:id="@+id/tex_aqi_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/tex_aqi"
                     android:textColor="#FFF"
                     android:textSize="18sp" 
-                    tools:text="空气指数" />
+                    tools:text="" />
                 <TextView
                     android:id="@+id/tex_aqi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/tex_aqi_img"
+                    android:layout_centerInParent="true"
                     android:textColor="#FFF"
                     android:textSize="18sp"
-                    tools:text="187" />
+                    tools:text="空气指数:187 优" />
 
-                <TextView
-                    android:id="@+id/tex_quality"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/activity_bottom_margin"
-                    android:layout_toEndOf="@id/tex_aqi"
-                    android:textColor="#FFF"
-                    android:textSize="18sp"
-                    tools:text="重度污染" />
 
             </RelativeLayout>
             <RelativeLayout
@@ -156,20 +148,19 @@
                     android:id="@+id/tex_sport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
                     android:textColor="#FFF"
                     android:textSize="18sp"
-                    tools:text="运动:较不宜" />
+                    tools:text="运动:较不宜 感冒:较易发" />
 
                 <TextView
                     android:id="@+id/tex_ganmao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/activity_bottom_margin"
                     android:layout_toEndOf="@id/tex_sport"
                     android:textColor="#FFF"
                     android:textSize="18sp"
-                    tools:text="感冒:较易发" />
+                    tools:text="" />
 
             </RelativeLayout>
 
@@ -182,6 +173,18 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="#484E61">
+            <TextView
+                android:id="@+id/tex_today"
+                android:text="@string/today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="@dimen/bottom_font_size"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="@dimen/activity_bottom_margin"
+                tools:text="今天"
+                />
 
             <TextView
                 android:id="@+id/tex_today_wendu"
@@ -267,18 +270,7 @@
                 android:textSize="@dimen/bottom_font_size"
                 tools:text="微风" />
 
-            <TextView
-                android:id="@+id/tex_today"
-                android:text="@string/today"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#fff"
-                android:textSize="@dimen/bottom_font_size"
-                tools:text="今天"
-                android:layout_marginLeft="@dimen/activity_bottom_margin"
-                android:layout_marginRight="@dimen/activity_bottom_margin"
-                android:layout_above="@+id/tex_today_type"
-                android:layout_alignStart="@+id/tex_today_type" />
+
         </RelativeLayout>
     </RelativeLayout>
 

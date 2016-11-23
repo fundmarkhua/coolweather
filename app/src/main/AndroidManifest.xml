@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!-- 写入扩展存储，向扩展卡写入数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -39,41 +39,48 @@
         </activity>
         <activity android:name=".WeatherActivity">
         </activity>-->
-        <activity android:name=".ChooseCityActivity">
+        <activity
+            android:name=".ChooseCityActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeatherActivity">
+        <activity
+            android:name=".WeatherActivity"
+            android:screenOrientation="portrait">
+
         </activity>
-        <activity android:name=".ChooseAreaActivity">
+        <activity
+            android:name=".ChooseAreaActivity"
+            android:screenOrientation="portrait">
+
         </activity>
-       <!--
-        <service android:name=".service.AutoUpdateService"> </service>
-        <receiver android:name=".receive.AutoUpdateReceiver"> </receiver>
-        -->
+        <!--
+         <service android:name=".service.AutoUpdateService"> </service>
+         <receiver android:name=".receive.AutoUpdateReceiver"> </receiver>
+         -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" >
-                </action>
+                <action android:name="com.baidu.location.service_v2.2"></action>
             </intent-filter>
         </service>
 
         <!-- meta-data需要写在application中 -->
-        <!-- 公司秘钥
+        <!-- 公司秘钥 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="lcZb3i3dX0jfjzIh3kFuQiMN1NiR6XQU" />
-         -->
-        <!-- 家里秘钥-->
+
+        <!-- 家里秘钥
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="DNFs4CsvQwEDy7scy2D51XXQ2QbMtry2" />
+            android:value="DNFs4CsvQwEDy7scy2D51XXQ2QbMtry2" /> -->
 
     </application>
 

@@ -94,6 +94,7 @@ public class ChooseCityActivity extends AppCompatActivity implements OnScrollLis
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+        LogUntil.w("coolweather","ChooseCityActivity onCreate");
         if (preferences.getBoolean("city_selected", false) && !isFromWeatherActivity) {
             Intent intent = new Intent(this, WeatherActivity.class);
             startActivity(intent);

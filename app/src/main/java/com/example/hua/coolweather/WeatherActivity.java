@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,10 +53,6 @@ public class WeatherActivity extends AppCompatActivity {
      * 用于显示空气指数
      */
     private TextView textAqi;
-    /**
-     * 用于显示空气质量
-     */
-    private TextView textQuality;
     /**
      * 用于显示运动指数
      */
@@ -104,12 +101,12 @@ public class WeatherActivity extends AppCompatActivity {
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
             cityNameText.setVisibility(View.INVISIBLE);
-            queryWeatherInfo(countyCode,"city");
+            queryWeatherInfo(countyCode, "city");
         } else {
             //没有区县代号就显示本地天气
             showWeather();
         }
-        LogUntil.w("coolweather","3321");
+        LogUntil.w("coolweather", "3321");
     }
 
     /**
@@ -124,7 +121,6 @@ public class WeatherActivity extends AppCompatActivity {
         textFengli = (TextView) findViewById(R.id.tex_fengli);
         textShidu = (TextView) findViewById(R.id.tex_shidu);
         textAqi = (TextView) findViewById(R.id.tex_aqi);
-        textQuality = (TextView) findViewById(R.id.tex_quality);
         textSport = (TextView) findViewById(R.id.tex_sport);
         textGanmao = (TextView) findViewById(R.id.tex_ganmao);
         texTodayWendu = (TextView) findViewById(R.id.tex_today_wendu);
@@ -181,7 +177,7 @@ public class WeatherActivity extends AppCompatActivity {
             }
         }
         //String address = "http://wthrcdn.etouch.cn/weather_mini?" + type + "=" + weatherCode;
-        String address = "http://wthrcdn.etouch.cn/WeatherApi?" +type+ "=" + weatherCode;
+        String address = "http://wthrcdn.etouch.cn/WeatherApi?" + type + "=" + weatherCode;
         LogUntil.w("coolweather", address);
         //queryFromServer(address, "weatherCode");
         queryFromServer(address, "weatherCodeXml");
@@ -271,31 +267,50 @@ public class WeatherActivity extends AppCompatActivity {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             try {
                 String citynames = preferences.getString("city_name", "");
-                if(citynames.equals("")){
+                if (citynames.equals("")) {
                     queryWeatherInfo("101010100", "citykey");
                 }
-                LogUntil.w("coolweather",citynames);
+
                 cityNameText.setText(preferences.getString("city_name", ""));
                 textType.setText(preferences.getString("weather_desp", ""));
                 publishText.setText(String.valueOf(preferences.getString("publish_time", "") + " 更新"));
-                textWendu.setText(preferences.getString("wendu", "")+"℃");
-                textFengli.setText(String.valueOf(preferences.getString("fengxiang", "") + preferences.getString("fengli", "")));
-                textShidu.setText("湿度:"+preferences.getString("shidu", ""));
-                textAqi.setText("空气指数:"+preferences.getString("aqi", ""));
-                textQuality.setText(preferences.getString("quality", ""));
-                textSport.setText("运动:"+preferences.getString("sportDesp", ""));
-                textGanmao.setText("感冒:"+preferences.getString("ganmaoDesp", ""));
-                texTodayWendu.setText(String.valueOf(preferences.getString("temp1", "") + preferences.getString("temp2", "")));
+                String wendu = preferences.getString("wendu", "");
+                textWendu.setText(String.valueOf(wendu + "℃"));
+                textFengli.setText(String.valueOf(preferences.getString("fengxiang", "") + preferences.getString("fengli", "")+" 湿度:" + preferences.getString("shidu", "")));
+                String quality = preferences.getString("quality", "");
+                if(quality.length()<=2){
+                    quality = "空气质量:"+quality;
+                }
+                textAqi.setText("空气指数:" + preferences.getString("aqi", "")+" "+quality);
+                textSport.setText(String.valueOf("运动:" + preferences.getString("sportDesp", "")+" 感冒:" + preferences.getString("ganmaoDesp", "")));
+                StringBuffer todaywendu = new StringBuffer();
+                todaywendu.append(preferences.getString("temp1", "").replaceAll("[^\\d]", "").trim());
+                todaywendu.append("/");
+                todaywendu.append(preferences.getString("temp2", "").replaceAll("[^\\d]", "").trim());
+                todaywendu.append("℃");
+                texTodayWendu.setText(todaywendu);
+
                 texTodayType.setText(preferences.getString("weather_desp", ""));
                 texTodayFeng.setText("");
                 textTomFeng.setText("");
                 texTomType.setText(preferences.getString("tomWeatherDesp", ""));
-                texTomWendu.setText(String.valueOf(preferences.getString("tomtemp1", "") + preferences.getString("tomtemp2", "")));
+                StringBuffer tomwendu = new StringBuffer();
+                tomwendu.append(preferences.getString("tomtemp1", "").replaceAll("[^\\d]", "").trim());
+                tomwendu.append("/");
+                tomwendu.append(preferences.getString("tomtemp2", "").replaceAll("[^\\d]", "").trim());
+                tomwendu.append("℃");
+                texTomWendu.setText(tomwendu);
+                int wendunum = Integer.parseInt(wendu);
+                RelativeLayout weatherAllLayout = (RelativeLayout)findViewById(R.id.weather_all_layout);
+                if(wendunum>10){
+                    weatherAllLayout.setBackground(getResources().getDrawable(R.drawable.autumn,null));
+                }else{
+                    weatherAllLayout.setBackground(getResources().getDrawable(R.drawable.winner,null));
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             weatherInfoLayout.setVisibility(View.VISIBLE);
             cityNameText.setVisibility(View.VISIBLE);
 //            Intent intent = new Intent(this, AutoUpdateService.class);
